@@ -1,4 +1,4 @@
-package main.Properties;
+package main.Properties.Custom;
 import javax.swing.*;
 
 import main.Miscellanous.Constants;

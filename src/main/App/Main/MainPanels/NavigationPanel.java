@@ -8,7 +8,7 @@ import javax.swing.*;
 import main.Miscellanous.Constants;
 import main.Objects.User;
 import main.Properties.*;
-import main.Properties.CustomButton;
+import main.Properties.Custom.CustomButton;
 
 public class NavigationPanel extends JPanel{
     

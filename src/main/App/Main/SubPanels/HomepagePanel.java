@@ -3,8 +3,8 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 import main.App.Main.MainPanels.DashboardPanel;
 import main.Miscellanous.Constants;
-import main.Properties.ButtonPanel;
-import main.Properties.TextPanel;
+import main.Properties.Custom.ButtonPanel;
+import main.Properties.Custom.TextPanel;
 
 public class HomepagePanel extends JPanel {
     private TextPanel textPanel;

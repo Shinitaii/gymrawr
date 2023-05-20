@@ -4,9 +4,9 @@ import java.awt.CardLayout;
 import javax.swing.*;
 
 import main.App.Main.SubPanels.*;
-import main.Properties.CustomListener;
-import main.Properties.CustomPanel;
 import main.Miscellanous.Constants;
+import main.Properties.Custom.CustomListener;
+import main.Properties.Custom.CustomPanel;
 
 public class MainScreenPanel extends JPanel{
 
@@ -30,11 +30,11 @@ public class MainScreenPanel extends JPanel{
 
         homepagePanel = new HomepagePanel(dashboardPanel);
         add(homepagePanel, "Homepage");
-        memberPanel = new CustomPanel("Member", Constants.BLUE_MEMBER_ICON, member);
+        memberPanel = new CustomPanel("Member", Constants.BLUE_MEMBER_ICON, Constants.MEMBER_ICON, member);
         add(memberPanel, "Member");
-        trainerPanel = new CustomPanel("Trainer", Constants.BLUE_TRAINER_ICON, trainer);
+        trainerPanel = new CustomPanel("Trainer", Constants.BLUE_TRAINER_ICON, Constants.TRAINER_ICON,trainer);
         add(trainerPanel, "Trainer");
-        equipmentPanel = new CustomPanel("Equipment", Constants.EQUIPMENT_ICON, equipment);
+        equipmentPanel = new CustomPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, Constants.EQUIPMENT_ICON, equipment);
         add(equipmentPanel, "Equipment");
         attendancePanel = new AttendancePanel();
         add(attendancePanel, "Attendance");
@@ -42,7 +42,7 @@ public class MainScreenPanel extends JPanel{
         add(paymentPanel, "Payment");
         salesReportPanel = new SalesReportPanel();
         add(salesReportPanel, "Sales Report");
-        staffPanel = new CustomPanel("Staff", Constants.STAFF_ICON, staff);
+        staffPanel = new CustomPanel("Staff", Constants.STAFF_ICON, Constants.STAFF_ICON,staff);
         add(staffPanel, "Staff");
         posPanel = new POSPanel();
         add(posPanel, "POS");

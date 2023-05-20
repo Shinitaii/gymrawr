@@ -5,7 +5,7 @@ import javax.swing.*;
 
 import main.App.Login.LoginWindow;
 import main.Miscellanous.Constants;
-import main.Properties.CustomButton;
+import main.Properties.Custom.CustomButton;
 
 public class DashboardPanel extends JPanel{
 

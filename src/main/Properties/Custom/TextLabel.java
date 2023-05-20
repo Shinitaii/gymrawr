@@ -1,4 +1,4 @@
-package main.Properties;
+package main.Properties.Custom;
 import java.awt.Color;
 import java.awt.Font;
 

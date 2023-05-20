@@ -1,8 +1,10 @@
-package main.Properties;
+package main.Properties.Custom;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+
+import main.Properties.Hover;
 
 public class CustomButton extends JButton{
     
