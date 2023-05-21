@@ -1,5 +1,8 @@
 package main.App.Login.Panels;
 import javax.swing.*;
+
+import main.Properties.Focus;
+
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,15 +18,7 @@ public class CredentialPanel extends JPanel{
         //username text field creation
         usernameField = new JTextField(25);
         setPlaceholder(usernameField, "Username");
-        usernameField.addFocusListener(new FocusListener(){
-            public void focusGained(FocusEvent e) {
-                if(usernameField.getText().equals("Username")) usernameField.setText("");
-                usernameField.setForeground(Color.BLACK);
-            }
-            public void focusLost(FocusEvent e){
-                if(usernameField.getText().isEmpty()) setPlaceholder(usernameField, "Username");
-            }
-        });
+        usernameField.addFocusListener(new Focus(usernameField, "Username"));
         add(usernameField);
 
         //password field creation

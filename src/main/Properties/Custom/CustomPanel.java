@@ -1,26 +1,41 @@
 package main.Properties.Custom;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
 public class CustomPanel extends JPanel{ // custompanel is for client, trainer, equipment and staff panels
+    private JPanel mainPanel;
+    private CardLayout cardLayout;
     private TextPanel textPanel;
     private ButtonPanel buttonPanel;
 
-    public CustomPanel(String panelName, ImageIcon icon, ImageIcon secondIcon, ActionListener listener){
+    public CustomPanel(String panelName, ImageIcon icon){
+        cardLayout = new CardLayout();
+        setLayout(cardLayout);
+        mainPanel = new JPanel(new BorderLayout());
+        add(mainPanel, "Main");
         textPanel = new TextPanel(panelName, icon);
-        add(textPanel);
+        mainPanel.add(textPanel, BorderLayout.NORTH);
         buttonPanel = new ButtonPanel();
-        addButtons(buttonPanel, panelName, secondIcon, listener);
-        add(buttonPanel);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
-    // creates add, update, and list buttons for the custom panels.
-    private void addButtons(ButtonPanel buttonPanel, String name, ImageIcon icon, ActionListener listener){
-        buttonPanel.addButton("New " + name, icon, listener, "Add");
-        buttonPanel.addButton("Update " + name, icon, listener, "Update");
-        buttonPanel.addButton("List of " + name, icon, listener, "List");
+    private ButtonPanel getButtonPanel(){
+        return buttonPanel;
     }
 
+    public CardLayout getCardLayout(){
+        return cardLayout;
+    }
+
+    public void showMain(){
+        getCardLayout().show(this, "Main");
+    }
+
+    public void addButton(String name, ImageIcon icon, ActionListener listener){
+        getButtonPanel().addButton(name, icon, listener);
+    }
 }

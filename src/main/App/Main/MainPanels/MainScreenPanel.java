@@ -1,48 +1,38 @@
 package main.App.Main.MainPanels;
 import java.awt.CardLayout;
-
 import javax.swing.*;
-
 import main.App.Main.SubPanels.*;
 import main.Miscellanous.Constants;
-import main.Properties.Custom.CustomListener;
+import main.Properties.AddUpdateList.AddUpdateListPanel;
 import main.Properties.Custom.CustomPanel;
 
 public class MainScreenPanel extends JPanel{
 
     private CardLayout cardLayout;
     private HomepagePanel homepagePanel;
-    private CustomPanel memberPanel, trainerPanel, equipmentPanel, staffPanel;
-    private AttendancePanel attendancePanel;
-    private PaymentPanel paymentPanel;
-    private SalesReportPanel salesReportPanel;
+    private AddUpdateListPanel memberPanel, trainerPanel, equipmentPanel, staffPanel;
+    private CustomPanel attendancePanel, paymentPanel, salesReportPanel;
     private POSPanel posPanel;
-    private CustomListener member, trainer, equipment, staff;
 
     public MainScreenPanel(DashboardPanel dashboardPanel){
         cardLayout = new CardLayout();
         setLayout(cardLayout);
 
-        member = new CustomListener(0);
-        trainer = new CustomListener(1);
-        equipment = new CustomListener(2);
-        staff = new CustomListener(3);
-
         homepagePanel = new HomepagePanel(dashboardPanel);
         add(homepagePanel, "Homepage");
-        memberPanel = new CustomPanel("Member", Constants.BLUE_MEMBER_ICON, Constants.MEMBER_ICON, member);
+        memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON);
         add(memberPanel, "Member");
-        trainerPanel = new CustomPanel("Trainer", Constants.BLUE_TRAINER_ICON, Constants.TRAINER_ICON,trainer);
+        trainerPanel = new AddUpdateListPanel("Trainer", Constants.BLUE_TRAINER_ICON);
         add(trainerPanel, "Trainer");
-        equipmentPanel = new CustomPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, Constants.EQUIPMENT_ICON, equipment);
+        equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON);
         add(equipmentPanel, "Equipment");
-        attendancePanel = new AttendancePanel();
+        attendancePanel = new CustomPanel("Attendance", Constants.BLUE_ATTENDANCE_ICON);
         add(attendancePanel, "Attendance");
-        paymentPanel = new PaymentPanel();
+        paymentPanel = new CustomPanel("Payment", Constants.BLUE_PAYMENT_ICON);
         add(paymentPanel, "Payment");
-        salesReportPanel = new SalesReportPanel();
+        salesReportPanel = new CustomPanel("Sales Report", Constants.BLUE_SALES_REPORT_ICON);
         add(salesReportPanel, "Sales Report");
-        staffPanel = new CustomPanel("Staff", Constants.STAFF_ICON, Constants.STAFF_ICON,staff);
+        staffPanel = new AddUpdateListPanel("Staff", Constants.BLUE_STAFF_ICON);
         add(staffPanel, "Staff");
         posPanel = new POSPanel();
         add(posPanel, "POS");

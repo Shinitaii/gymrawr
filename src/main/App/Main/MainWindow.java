@@ -15,6 +15,7 @@ public class MainWindow {
         mainPanel = new MainPanel(user);
         window.add(mainPanel);
 
+        window.setResizable(false);
         window.setSize(800,500);
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         window.setLocationRelativeTo(null);
