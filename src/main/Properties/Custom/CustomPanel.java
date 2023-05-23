@@ -12,12 +12,12 @@ public class CustomPanel extends JPanel{ // custompanel is for client, trainer, 
     private TextPanel textPanel;
     private ButtonPanel buttonPanel;
 
-    public CustomPanel(String panelName, ImageIcon icon){
+    public CustomPanel(String panelName, ImageIcon icon, int size){
         cardLayout = new CardLayout();
         setLayout(cardLayout);
         mainPanel = new JPanel(new BorderLayout());
         add(mainPanel, "Main");
-        textPanel = new TextPanel(panelName, icon);
+        textPanel = new TextPanel(panelName, icon, size);
         mainPanel.add(textPanel, BorderLayout.NORTH);
         buttonPanel = new ButtonPanel();
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);

@@ -20,19 +20,19 @@ public class MainScreenPanel extends JPanel{
 
         homepagePanel = new HomepagePanel(dashboardPanel);
         add(homepagePanel, "Homepage");
-        memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON);
+        memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON, 25);
         add(memberPanel, "Member");
-        trainerPanel = new AddUpdateListPanel("Trainer", Constants.BLUE_TRAINER_ICON);
+        trainerPanel = new AddUpdateListPanel("Trainer", Constants.BLUE_TRAINER_ICON, 25);
         add(trainerPanel, "Trainer");
-        equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON);
+        equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
         add(equipmentPanel, "Equipment");
-        attendancePanel = new CustomPanel("Attendance", Constants.BLUE_ATTENDANCE_ICON);
+        attendancePanel = new CustomPanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
         add(attendancePanel, "Attendance");
-        paymentPanel = new CustomPanel("Payment", Constants.BLUE_PAYMENT_ICON);
+        paymentPanel = new CustomPanel("Payment", Constants.BLUE_PAYMENT_ICON, 25);
         add(paymentPanel, "Payment");
-        salesReportPanel = new CustomPanel("Sales Report", Constants.BLUE_SALES_REPORT_ICON);
+        salesReportPanel = new CustomPanel("Sales Report", Constants.BLUE_SALES_REPORT_ICON, 25);
         add(salesReportPanel, "Sales Report");
-        staffPanel = new AddUpdateListPanel("Staff", Constants.BLUE_STAFF_ICON);
+        staffPanel = new AddUpdateListPanel("Staff", Constants.BLUE_STAFF_ICON, 25);
         add(staffPanel, "Staff");
         posPanel = new POSPanel();
         add(posPanel, "POS");

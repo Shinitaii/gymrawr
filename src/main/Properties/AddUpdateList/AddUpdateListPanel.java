@@ -9,14 +9,14 @@ public class AddUpdateListPanel extends CustomPanel{
     private UpdatePanel updatePanel;
     private ListPanel listPanel;
 
-    public AddUpdateListPanel(String panelName, ImageIcon icon) {
-        super(panelName, icon);
-        addPanel = new AddPanel(this, panelName);
-        add(addPanel, "Add");
+    public AddUpdateListPanel(String panelName, ImageIcon icon, int size) {
+        super(panelName, icon, size);
         updatePanel = new UpdatePanel(this, panelName);
         add(updatePanel, "Update");
         listPanel = new ListPanel(this, panelName);
         add(listPanel, "List");
+        addPanel = new AddPanel(this, panelName, listPanel);
+        add(addPanel, "Add");
 
         addButton("Add " + panelName, Constants.ADD_ICON, e -> getCardLayout().show(this, "Add"));
         addButton("Update " + panelName, Constants.UPDATE_ICON, e -> getCardLayout().show(this, "Update"));

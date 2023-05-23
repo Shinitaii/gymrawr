@@ -6,6 +6,7 @@ import javax.swing.*;
 import main.App.Main.MainWindow;
 import main.Database.MySQL;
 import main.Miscellanous.Messages;
+import main.Objects.Products;
 import main.Objects.User;
 
 import java.sql.*;
@@ -41,8 +42,7 @@ public class LoginButtonPanel extends JPanel{
 
     private void checkCredentials(String username, String password){
         try(Connection conn = MySQL.getConnection()){ 
-            PreparedStatement query = conn.prepareStatement(
-                "select user_id, user_username, user_password, user_level from users where user_username = ? and user_password = ?");
+            PreparedStatement query = conn.prepareStatement("select * from users where user_username = ? and user_password = ?");
             query.setString(1, username);
             query.setString(2, password);
             ResultSet result = query.executeQuery();
@@ -66,6 +66,7 @@ public class LoginButtonPanel extends JPanel{
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    Products.initializeProducts();
 					MainWindow window = new MainWindow(user);
 					window.getWindow().setVisible(true);
 				} catch (Exception e) {

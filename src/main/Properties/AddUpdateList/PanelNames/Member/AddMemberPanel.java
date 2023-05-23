@@ -1,33 +1,28 @@
-package main.Properties.AddUpdateList.PanelNames;
-import java.awt.*;
-import java.sql.*;
-import java.text.*;
-
+package main.Properties.AddUpdateList.PanelNames.Member;
 import javax.swing.*;
 import javax.swing.text.*;
 
 import main.Database.MySQL;
 import main.Miscellanous.Messages;
+import main.Objects.Products;
 import main.Properties.Focus;
 import main.Properties.Custom.*;
 
-public class MemberPanel extends JPanel{
+import java.awt.*;
+import java.sql.*;
+import java.text.*;
+
+public class AddMemberPanel extends JPanel{
     private JTextField firstNameField, middleNameField, lastNameField;
     private JFormattedTextField dateField, contactNumberField;
     private JRadioButton male, female;
-    private CustomButton clear, add, update, selectMember;
+    private JComboBox<String> selection;
+    private CustomButton clear, add;
     private ButtonGroup gender;
-    
-    public MemberPanel(String command, String panelName){
-        if(command.equals("Add")) {
-            add(panelName); 
-            addButtons(panelName);
-        } else if(command.equals("Update")) {
-            update(panelName);
-        } else list(panelName);   
-    }
 
-    private void add(String panelName){
+    private int[] selectionDuration;
+
+    public AddMemberPanel(ListMemberPanel listMemberPanel){
         setLayout(new GridBagLayout());
         //firstname txtfield
         firstNameField = new JTextField(30);
@@ -82,61 +77,51 @@ public class MemberPanel extends JPanel{
         female = createRadioButton("Female", "female");
         addComponent(female, 4, 1, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)); 
 
-    }
-
-    private void addButtons(String panelName){
-        add = new CustomButton("Add", null, e -> addMember());
+        selection = new JComboBox<String>();
+        selectionDuration = new int[Products.getProductList().size()];
+        int index = 0;
+        for(Products products : Products.getProductList()){
+            if(products.getProductType() == 1) { //if product type is 1 (member)
+                selection.addItem(products.getProductName());
+                selectionDuration[index] = products.getProductDayDuration();
+                index++;
+             }
+        }
+        addComponent(selection, 2, 2, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5));
+        add = new CustomButton("Add", null, e -> addMember(listMemberPanel));
         addComponent(add, 3, 3, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5)); 
         clear = new CustomButton("Clear", null, e -> clearForm());
         addComponent(clear, 4,3, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5));
     }
-    
-    private void addMember(){
+
+    private void addMember(ListMemberPanel listMemberPanel){
         try(Connection conn = MySQL.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO members VALUES (null, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY))");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO members VALUES (null, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY))");
             statement.setString(1, firstNameField.getText());
             statement.setString(2, middleNameField.getText());
             statement.setString(3, lastNameField.getText());
             statement.setDate(4, Date.valueOf(dateField.getText()));
             statement.setLong(5, Long.valueOf(contactNumberField.getText()));
             statement.setString(6, gender.getSelection().getActionCommand());
+            statement.setInt(7, selectionDuration[selection.getSelectedIndex()]);
 
             int rowsAffected = statement.executeUpdate();
-            if(rowsAffected > 0) Messages.memberAdded();
+            if(rowsAffected > 0) {
+                Messages.memberAdded();
+                listMemberPanel.updateTableData();
+            }
             else Messages.memberAddFailed();
-            clearForm();
             conn.close();
         } catch (SQLException e){
             Messages.databaseConnectionFailed();
+            e.printStackTrace();
         } catch (IllegalArgumentException e){
             Messages.invalidDateFormat();
+            e.printStackTrace();
         } catch (NullPointerException e){
             Messages.invalidGender();
+            e.printStackTrace();
         }
-    }
-
-    private void update(String panelName){
-        add(panelName);
-        selectMember = new CustomButton("Select member", null, e -> selectMember());
-        update = new CustomButton("Update", null, e -> updateMember());
-        addComponent(update, 3, 3, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5));
-        clearButton();
-    }
-
-    private void selectMember(){
-        JOption
-    }
-
-    private void updateMember(){
-        try(Connection conn = MySQL.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("select *")
-        } catch (SQLException e){
-            Messages.databaseConnectionFailed();
-        }
-    }
-
-    private void list(String panelName){
-
     }
 
     private void clearForm(){
@@ -146,11 +131,6 @@ public class MemberPanel extends JPanel{
         dateField.setText("");
         contactNumberField.setText("0");
         gender.clearSelection();
-    }
-
-    private void clearButton(){
-        clear = new CustomButton("Clear", null, e -> clearForm());
-        addComponent(clear, 4,3, 1, 1, GridBagConstraints.HORIZONTAL, GridBagConstraints.CENTER, new Insets(5, 5, 5, 5));
     }
 
     private void addComponent(Component component, int gridx, int gridy, int gridwidth, int gridheight, int fill, int anchor, Insets insets) {
@@ -172,5 +152,4 @@ public class MemberPanel extends JPanel{
         gender.add(radioButton);
         return radioButton;
     }
-    
 }

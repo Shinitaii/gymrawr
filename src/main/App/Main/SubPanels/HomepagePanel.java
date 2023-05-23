@@ -12,7 +12,7 @@ public class HomepagePanel extends JPanel {
 
     public HomepagePanel(DashboardPanel dashboardPanel){
         setLayout(new BorderLayout());
-        textPanel = new TextPanel("Welcome to GYM RAWR", Constants.APP_ICON);
+        textPanel = new TextPanel("Welcome to GYM RAWR", Constants.APP_ICON, 25);
         add(textPanel, BorderLayout.NORTH);
         buttonPanel = new ButtonPanel();
         add(buttonPanel, BorderLayout.CENTER);

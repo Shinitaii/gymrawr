@@ -8,7 +8,7 @@ public class BackPanel extends JPanel{
     private CustomButton backButton;
 
     public BackPanel(AddUpdateListPanel addUpdateListPanel){
-        backButton = new CustomButton("Back", Constants.BACK_ICON, e -> addUpdateListPanel.showMain());
+        backButton = new CustomButton("Back", Constants.scaledImage(Constants.BACK_ICON), e -> addUpdateListPanel.showMain());
         add(backButton);
     }
 }
