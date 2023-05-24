@@ -46,4 +46,36 @@ public class Messages {
     public static void memberNotUpdated(){
         JOptionPane.showMessageDialog(null, "Member cannot be updated!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void trainerAdded(){
+        JOptionPane.showMessageDialog(null, "Successfully added a new trainer!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void trainerAddFailed(){
+        JOptionPane.showMessageDialog(null, "Failed to add a new trainer!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void trainerFound(){
+        JOptionPane.showMessageDialog(null, "Trainer found!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void trainerNotFound(){
+        JOptionPane.showMessageDialog(null, "Trainer not found!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void trainerUpdated(){
+        JOptionPane.showMessageDialog(null, "Trainer updated!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void trainerNotUpdated(){
+        JOptionPane.showMessageDialog(null, "Trainer cannot be updated!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void trainerAssignSuccess(){
+        JOptionPane.showMessageDialog(null, "Trainer successfully assigned to member!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void trainerAssignFailed(){
+        JOptionPane.showMessageDialog(null, "Trainer failed to assign to a member!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
 }

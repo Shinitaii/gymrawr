@@ -20,7 +20,7 @@ public class CustomPanel extends JPanel{ // custompanel is for client, trainer, 
         textPanel = new TextPanel(panelName, icon, size);
         mainPanel.add(textPanel, BorderLayout.NORTH);
         buttonPanel = new ButtonPanel();
-        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
+        mainPanel.add(buttonPanel, BorderLayout.CENTER);
     }
 
     private ButtonPanel getButtonPanel(){

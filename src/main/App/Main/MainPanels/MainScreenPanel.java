@@ -2,8 +2,10 @@ package main.App.Main.MainPanels;
 import java.awt.CardLayout;
 import javax.swing.*;
 import main.App.Main.SubPanels.*;
+import main.App.Main.SubPanels.AddUpdateList.AddUpdateListPanel;
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.AssignTrainerPanel;
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListAssignedTrainerPanel;
 import main.Miscellanous.Constants;
-import main.Properties.AddUpdateList.AddUpdateListPanel;
 import main.Properties.Custom.CustomPanel;
 
 public class MainScreenPanel extends JPanel{
@@ -14,6 +16,9 @@ public class MainScreenPanel extends JPanel{
     private CustomPanel attendancePanel, paymentPanel, salesReportPanel;
     private POSPanel posPanel;
 
+    private AssignTrainerPanel assignTrainerPanel;
+    private ListAssignedTrainerPanel listAssignedTrainerPanel;
+
     public MainScreenPanel(DashboardPanel dashboardPanel){
         cardLayout = new CardLayout();
         setLayout(cardLayout);
@@ -23,6 +28,12 @@ public class MainScreenPanel extends JPanel{
         memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON, 25);
         add(memberPanel, "Member");
         trainerPanel = new AddUpdateListPanel("Trainer", Constants.BLUE_TRAINER_ICON, 25);
+        assignTrainerPanel = new AssignTrainerPanel(trainerPanel);
+        trainerPanel.add(assignTrainerPanel, "Assign Trainer");
+        listAssignedTrainerPanel = new ListAssignedTrainerPanel(trainerPanel);
+        trainerPanel.add(listAssignedTrainerPanel, "List Assign Trainer");
+        trainerPanel.addButton("Assign Trainer", Constants.ASSIGN_TRAINER_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "Assign Trainer"));
+        trainerPanel.addButton("List of Assigned Trainer", Constants.LIST_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "List Assign Trainer"));
         add(trainerPanel, "Trainer");
         equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
         add(equipmentPanel, "Equipment");
@@ -38,39 +49,48 @@ public class MainScreenPanel extends JPanel{
         add(posPanel, "POS");
     }
 
-    public void showHomepage(){
+    public void showHomepage(DashboardPanel dashboardPanel){
         cardLayout.show(this, "Homepage");
+        dashboardPanel.setActiveButton(dashboardPanel.getHomepage());
     }
 
-    public void showMember(){
+    public void showMember(DashboardPanel dashboardPanel){
         cardLayout.show(this, "Member");
+        dashboardPanel.setActiveButton(dashboardPanel.getMember());
     }
 
-    public void showTrainer(){
+    public void showTrainer(DashboardPanel dashboardPanel){
         cardLayout.show(this,"Trainer");
+        dashboardPanel.setActiveButton(dashboardPanel.getTrainer());
     }
 
-    public void showEquipment(){
+    public void showEquipment(DashboardPanel dashboardPanel){
         cardLayout.show(this, "Equipment");
+        dashboardPanel.setActiveButton(dashboardPanel.getEquipment());
     }
 
-    public void showAttendance(){
+    public void showAttendance(DashboardPanel dashboardPanel){
         cardLayout.show(this, "Attendance");
+        dashboardPanel.setActiveButton(dashboardPanel.getAttendance());
     }
 
-    public void showPayment(){
+    public void showPayment(DashboardPanel dashboardPanel){
         cardLayout.show(this,"Payment");
+        dashboardPanel.setActiveButton(dashboardPanel.getPayment());
     }
 
-    public void showSalesReport(){
+    public void showSalesReport(DashboardPanel dashboardPanel){
         cardLayout.show(this,"Sales Report");
+        dashboardPanel.setActiveButton(dashboardPanel.getSalesReport());
     }
 
-    public void showStaff(){
+    public void showStaff(DashboardPanel dashboardPanel){
         cardLayout.show(this, "Staff");
+        dashboardPanel.setActiveButton(dashboardPanel.getStaff());
     }
 
-    public void showPOS(){
+    public void showPOS(DashboardPanel dashboardPanel){
         cardLayout.show(this,"POS");
+        dashboardPanel.setActiveButton(dashboardPanel.getPOS());
     }
 }

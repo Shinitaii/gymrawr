@@ -5,14 +5,14 @@ import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import javax.swing.JButton;
+import main.Properties.Custom.CustomButton;
 
 public class Hover implements MouseListener{
 
-    private JButton button;
+    private CustomButton button;
     private Color buttonColor, hoveredColor;
 
-    public Hover(JButton button){
+    public Hover(CustomButton button){
         this.button = button;
         buttonColor = button.getBackground();
         hoveredColor = buttonColor.brighter();
@@ -24,7 +24,7 @@ public class Hover implements MouseListener{
     }
 
     public void mouseExited(MouseEvent e) {
-        button.setBackground(buttonColor);
+        if(!button.isHighlighted()) button.setBackground(buttonColor);
     }
 
     public void mousePressed(MouseEvent e) {

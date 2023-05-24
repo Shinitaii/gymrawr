@@ -34,6 +34,8 @@ public class Constants {
     public final static ImageIcon LIST_ICON = new ImageIcon("src/res/list.png");
     public final static ImageIcon BACK_ICON = new ImageIcon("src/res/back.png");
 
+    public final static ImageIcon ASSIGN_TRAINER_ICON = new ImageIcon("src/res/assign_trainer.png");
+
     public static ImageIcon scaledImage(ImageIcon icon){
         return new ImageIcon(icon.getImage().getScaledInstance(24,24, Image.SCALE_SMOOTH));
     }
