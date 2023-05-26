@@ -23,7 +23,7 @@ public class CustomPanel extends JPanel{ // custompanel is for client, trainer, 
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
     }
 
-    private ButtonPanel getButtonPanel(){
+    protected ButtonPanel getButtonPanel(){
         return buttonPanel;
     }
 
@@ -37,5 +37,9 @@ public class CustomPanel extends JPanel{ // custompanel is for client, trainer, 
 
     public void addButton(String name, ImageIcon icon, ActionListener listener){
         getButtonPanel().addButton(name, icon, listener);
+    }
+
+    public void removeButton(String name){
+        getButtonPanel().removeButton(name);
     }
 }

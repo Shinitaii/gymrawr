@@ -6,6 +6,7 @@ import javax.swing.*;
 import main.App.Main.MainWindow;
 import main.Database.MySQL;
 import main.Miscellanous.Messages;
+import main.Objects.EquipmentType;
 import main.Objects.Products;
 import main.Objects.Training;
 import main.Objects.User;
@@ -69,6 +70,7 @@ public class LoginButtonPanel extends JPanel{
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                     Products.initializeProducts();
                     Training.initializeTrainings();
+                    EquipmentType.initializeEquipmentTypes();
 					MainWindow window = new MainWindow(user);
 					window.getWindow().setVisible(true);
 				} catch (Exception e) {

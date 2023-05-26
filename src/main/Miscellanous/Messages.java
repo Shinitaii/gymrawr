@@ -78,4 +78,28 @@ public class Messages {
     public static void trainerAssignFailed(){
         JOptionPane.showMessageDialog(null, "Trainer failed to assign to a member!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void equipmentAdded(){
+        JOptionPane.showMessageDialog(null, "Successfully added a new equipment!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void equipmentAddFailed(){
+        JOptionPane.showMessageDialog(null, "Failed to add a new equipment!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void equipmentUpdated(){
+        JOptionPane.showMessageDialog(null, "Equipment updated!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void equipmentNotUpdated(){
+        JOptionPane.showMessageDialog(null, "Equipment cannot be updated!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void equipmentDeleted(){
+        JOptionPane.showMessageDialog(null, "Equipment deleted!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void equipmentNotDeleted(){
+        JOptionPane.showMessageDialog(null, "Equipment cannot be deleted!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
 }

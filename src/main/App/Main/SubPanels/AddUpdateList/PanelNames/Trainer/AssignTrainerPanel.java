@@ -62,7 +62,7 @@ public class AssignTrainerPanel extends JPanel{
     }
 
     private void setButtons(){
-        searchMemberField = CommonComponent.configureTextField(mainPanel, searchMemberField, "Search member", 0, 1, 1, 1);
+        searchMemberField = CommonComponent.configureTextField(mainPanel, "Search member", 0, 1, 1, 1);
         searchMember = new CustomButton("Search member", null, e -> searchMember());
         CommonComponent.addComponent(mainPanel, searchMember, 0, 4, 1, 1);
         selectionID = new int[Training.getTrainingList().size()];
@@ -183,5 +183,10 @@ public class AssignTrainerPanel extends JPanel{
            e.printStackTrace();
         }
         return tableModel;
+    }
+    
+    public void updateMemberTableData() {
+        memberTableModel.setRowCount(0);
+        initializeMemberModel(memberTableModel, 0);
     }
 }

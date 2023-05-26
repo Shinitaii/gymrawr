@@ -27,11 +27,11 @@ public class AddTrainerPanel extends JPanel {
     public AddTrainerPanel(ListPanel listPanel){
         setLayout(new GridBagLayout());
         //firstname txtfield
-        firstNameField = CommonComponent.configureTextField(this, firstNameField, "First name", 0, 0, 2, 1);
+        firstNameField = CommonComponent.configureTextField(this, "First name", 0, 0, 2, 1);
         //middlename
-        middleNameField = CommonComponent.configureTextField(this, middleNameField, "Middle name", 0, 1, 2, 1);
+        middleNameField = CommonComponent.configureTextField(this, "Middle name", 0, 1, 2, 1);
         //lastname
-        lastNameField = CommonComponent.configureTextField(this, lastNameField, "Last name", 0, 2, 2, 1); 
+        lastNameField = CommonComponent.configureTextField(this, "Last name", 0, 2, 2, 1); 
 
         TextLabel birthLabel = new TextLabel("Birth Date: (YYYY/MM/DD)", 12);
         CommonComponent.addComponent(this, birthLabel, 0, 3, 1, 1); 

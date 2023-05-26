@@ -32,10 +32,11 @@ public class MainScreenPanel extends JPanel{
         trainerPanel.add(assignTrainerPanel, "Assign Trainer");
         listAssignedTrainerPanel = new ListAssignedTrainerPanel(trainerPanel);
         trainerPanel.add(listAssignedTrainerPanel, "List Assign Trainer");
-        trainerPanel.addButton("Assign Trainer", Constants.ASSIGN_TRAINER_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "Assign Trainer"));
+        trainerPanel.addButton("Assign Trainer", Constants.ASSIGN_TRAINER_ICON, e -> assignTrainer());
         trainerPanel.addButton("List of Assigned Trainer", Constants.LIST_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "List Assign Trainer"));
         add(trainerPanel, "Trainer");
         equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
+        equipmentPanel.removeListButton("Equipment");
         add(equipmentPanel, "Equipment");
         attendancePanel = new CustomPanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
         add(attendancePanel, "Attendance");
@@ -92,5 +93,10 @@ public class MainScreenPanel extends JPanel{
     public void showPOS(DashboardPanel dashboardPanel){
         cardLayout.show(this,"POS");
         dashboardPanel.setActiveButton(dashboardPanel.getPOS());
+    }
+
+    private void assignTrainer(){
+        trainerPanel.getCardLayout().show(trainerPanel, "Assign Trainer");
+        assignTrainerPanel.updateMemberTableData();
     }
 }

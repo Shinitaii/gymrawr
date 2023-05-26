@@ -2,7 +2,6 @@ package main.App.Main.SubPanels.AddUpdateList;
 import java.awt.BorderLayout;
 
 import javax.swing.*;
-
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Member.ListMemberPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListTrainerPanel;
 
@@ -21,8 +20,8 @@ public class ListPanel extends JPanel{
     private void setMainPanel(String panelName){
         if(panelName.equals("Member")) member();
         else if (panelName.equals("Trainer")) trainer();
-        else if (panelName.equals("Equipment")) equipment();
-        else staff(); //if panel name is Staff
+        else if (panelName.equals("Staff")) staff();
+        // equipment update and list merged.
     }
 
     private void member(){
@@ -33,10 +32,6 @@ public class ListPanel extends JPanel{
     private void trainer(){
         trainerPanel = new ListTrainerPanel();
         add(trainerPanel, BorderLayout.CENTER);
-    }
-
-    private void equipment(){
-
     }
 
     private void staff(){

@@ -1,15 +1,10 @@
 package main.Miscellanous;
 
 import java.awt.*;
-import java.text.NumberFormat;
-import java.text.ParseException;
-
+import java.text.*;
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
-import javax.swing.text.NumberFormatter;
-
-import main.Objects.Products;
-import main.Objects.Training;
+import javax.swing.text.*;
+import main.Objects.*;
 import main.Properties.Focus;
 
 public class CommonComponent {
@@ -26,8 +21,8 @@ public class CommonComponent {
         panel.add(component, gbc);
     }
 
-    public static JTextField configureTextField(JPanel panel, JTextField textField, String placeholder, int x, int y, int w, int h) {
-        textField = new JTextField(30);
+    public static JTextField configureTextField(JPanel panel, String placeholder, int x, int y, int w, int h) {
+        JTextField textField = new JTextField(30);
         Focus.setPlaceholder(textField, placeholder);
         textField.addFocusListener(new Focus(textField, placeholder));
         addComponent(panel, textField, x, y, w, h);
@@ -61,6 +56,20 @@ public class CommonComponent {
         return textField;
     }
 
+    public static JFormattedTextField configureNumberField(JFormattedTextField textField){
+        NumberFormat numberFormat = NumberFormat.getIntegerInstance();
+        numberFormat.setGroupingUsed(false);
+        NumberFormatter numberFormatter = new NumberFormatter(numberFormat);
+        numberFormatter.setValueClass(Integer.class);
+        numberFormatter.setAllowsInvalid(false);
+        numberFormatter.setMaximum(Integer.MAX_VALUE); // 10 digit
+        textField = new JFormattedTextField(numberFormatter);
+        textField.setText("0");
+        textField.setColumns(10);
+
+        return textField;
+    }
+
     public static JComboBox<String> configureProductComboBox(JComboBox<String> comboBox, int[] duration, int type){
         comboBox = new JComboBox<String>();
         int index = 0;
@@ -80,6 +89,17 @@ public class CommonComponent {
         for(Training trainings : Training.getTrainingList()){
             comboBox.addItem(trainings.getTrainingName());
             trainingID[index] = trainings.getTrainingID();
+            index++;
+        }
+        return comboBox;
+    }
+
+    public static JComboBox<String> configureEquipmentTypeComboBox(JComboBox<String> comboBox, int[] equipmentType){
+        comboBox = new JComboBox<String>();
+        int index = 0;
+        for(EquipmentType equipmentTypes : EquipmentType.getEquipmentTypeList()){
+            comboBox.addItem(equipmentTypes.getEquipmentName());
+            equipmentType[index] = equipmentTypes.getEquipmentTypeID();
             index++;
         }
         return comboBox;

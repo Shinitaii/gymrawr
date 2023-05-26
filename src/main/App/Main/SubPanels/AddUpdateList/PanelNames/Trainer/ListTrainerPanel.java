@@ -14,6 +14,7 @@ public class ListTrainerPanel extends JPanel{
         tableModel = new DefaultTableModel();
         table = new JTable();
         retrieveDataFromDatabase();
+        table.getTableHeader().setReorderingAllowed(false);
         scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(650,350));
         add(scrollPane);

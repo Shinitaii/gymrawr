@@ -3,11 +3,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment.UpdateEquipmentPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Member.UpdateMemberPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.UpdateTrainerPanel;
 
 public class UpdatePanel extends JPanel{
     private BackPanel backPanel;
+
+    private UpdateEquipmentPanel equipmentPanel;
 
     public UpdatePanel(AddUpdateListPanel addUpdateListPanel, String panelName){
         setLayout(new BorderLayout());
@@ -34,10 +37,15 @@ public class UpdatePanel extends JPanel{
     }
 
     private void equipment(String panelName){
-
+        equipmentPanel = new UpdateEquipmentPanel();
+        add(equipmentPanel, BorderLayout.CENTER);
     }
 
     private void staff(String panelName){
 
+    }
+
+    public UpdateEquipmentPanel getUpdateEquipmentPanel(){
+        return equipmentPanel;
     }
 }

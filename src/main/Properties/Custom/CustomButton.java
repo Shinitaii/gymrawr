@@ -48,6 +48,7 @@ public class CustomButton extends JButton{
         setBorderPainted(false);
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         addMouseListener(new Hover(this));
+        setFocusPainted(false);
     }
 
 

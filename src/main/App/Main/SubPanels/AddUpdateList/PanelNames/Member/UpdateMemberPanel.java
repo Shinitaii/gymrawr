@@ -31,7 +31,7 @@ public class UpdateMemberPanel extends JPanel{
         
         fullNameLabel = new TextLabel("Enter full name:", 12);
         CommonComponent.addComponent(searchMemberPanel, fullNameLabel, 0, 0, 1, 1);
-        fullNameField = CommonComponent.configureTextField(searchMemberPanel, fullNameField, "Full name", 1, 0, 1, 1);
+        fullNameField = CommonComponent.configureTextField(searchMemberPanel, "Full name", 1, 0, 1, 1);
         withNoMiddleName = new JCheckBox("With no middle name?");
         withNoMiddleName.addItemListener(new ItemListener(){
             public void itemStateChanged(ItemEvent e) {
@@ -48,9 +48,9 @@ public class UpdateMemberPanel extends JPanel{
         add(editMemberPanel);
         editMemberPanel.setVisible(false);
 
-        firstNameField = CommonComponent.configureTextField(editMemberPanel, firstNameField, "First name", 0, 0, 2, 1);;
-        middleNameField = CommonComponent.configureTextField(editMemberPanel, middleNameField, "Middle name", 0, 1, 2, 1);
-        lastNameField = CommonComponent.configureTextField(editMemberPanel, lastNameField, "Last name", 0, 2, 2, 1); 
+        firstNameField = CommonComponent.configureTextField(editMemberPanel, "First name", 0, 0, 2, 1);;
+        middleNameField = CommonComponent.configureTextField(editMemberPanel, "Middle name", 0, 1, 2, 1);
+        lastNameField = CommonComponent.configureTextField(editMemberPanel, "Last name", 0, 2, 2, 1); 
 
         TextLabel birthLabel = new TextLabel("Birth Date: (YYYY/MM/DD)", 12);
         CommonComponent.addComponent(editMemberPanel, birthLabel, 0, 3, 1, 1); 
