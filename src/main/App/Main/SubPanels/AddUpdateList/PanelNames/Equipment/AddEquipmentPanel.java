@@ -15,7 +15,7 @@ import main.Properties.Custom.*;
 public class AddEquipmentPanel extends JPanel{
 
     private JTextField equipmentNameField;
-    private TextLabel equipmentQuantityLabel;
+    private TextLabel equipmentNameLabel, equipmentQuantityLabel;
     private JFormattedTextField equipmentQuantity;
     private JComboBox<String> selection;
     private CustomButton clear, add;
@@ -24,8 +24,9 @@ public class AddEquipmentPanel extends JPanel{
 
     public AddEquipmentPanel(UpdatePanel updatePanel, ListPanel listPanel){
         setLayout(new GridBagLayout());
-        
-        equipmentNameField = CommonComponent.configureTextField(this, "Equipment name", 0, 0, 1, 1);
+        equipmentNameLabel = new TextLabel("Equipment Name:", 12);
+        CommonComponent.addComponent(this, equipmentNameLabel, 0, 0, 1, 1);
+        equipmentNameField = CommonComponent.configureTextField(this, "Equipment name", 1, 0, 1, 1);
         equipmentQuantityLabel = new TextLabel("Enter the quantity:", 12);
         CommonComponent.addComponent(this, equipmentQuantityLabel, 1, 0, 1, 1);
         equipmentQuantity = CommonComponent.configureNumberField(equipmentQuantity);

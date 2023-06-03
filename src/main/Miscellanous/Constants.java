@@ -33,6 +33,8 @@ public class Constants {
     public final static ImageIcon UPDATE_ICON = new ImageIcon("src/res/update.png");
     public final static ImageIcon LIST_ICON = new ImageIcon("src/res/list.png");
     public final static ImageIcon BACK_ICON = new ImageIcon("src/res/back.png");
+    public final static ImageIcon DONE_ICON = new ImageIcon("src/res/check.png");
+    public final static ImageIcon CANCEL_ICON = new ImageIcon("src/res/cancel.png");
 
     public final static ImageIcon ASSIGN_TRAINER_ICON = new ImageIcon("src/res/assign_trainer.png");
 
@@ -42,5 +44,9 @@ public class Constants {
 
     public static ImageIcon mainScaleImage(ImageIcon icon){
         return new ImageIcon(icon.getImage().getScaledInstance(96, 96, Image.SCALE_SMOOTH));
+    }
+
+    public static ImageIcon miniScaleImage(ImageIcon icon){
+        return new ImageIcon(icon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH));
     }
 }

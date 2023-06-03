@@ -14,10 +14,10 @@ public class MainPanel extends JPanel{
 
     public MainPanel(User user){
         setLayout(new BorderLayout(0, 0));
-        dashboardPanel = new DashboardPanel();
+        dashboardPanel = new DashboardPanel(user);
         dashboardPanel.setBackground(Color.decode("#08145c"));
         add(dashboardPanel, BorderLayout.WEST);
-        mainScreenPanel = new MainScreenPanel(dashboardPanel);
+        mainScreenPanel = new MainScreenPanel(user, dashboardPanel);
         add(mainScreenPanel, BorderLayout.CENTER);
         dashboardPanel.setMainScreen(mainScreenPanel);
         navigationPanel = new NavigationPanel(user, dashboardPanel);

@@ -24,11 +24,17 @@ public class AddMemberPanel extends JPanel{
     public AddMemberPanel(ListMemberPanel listMemberPanel){
         setLayout(new GridBagLayout());
         //firstname txtfield
-        firstNameField = CommonComponent.configureTextField(this, "First name", 0, 0, 2, 1);
+        TextLabel firstNameLabel = new TextLabel("First name:", 12);
+        CommonComponent.addComponent(this, firstNameLabel, 0,0,1,1);
+        firstNameField = CommonComponent.configureTextField(this, "First name", 1, 0, 2, 1);
         //middlename
-        middleNameField = CommonComponent.configureTextField(this, "Middle name", 0, 1, 2, 1);
+        TextLabel middleNameLabel = new TextLabel("Middle name:", 12);
+        CommonComponent.addComponent(this, middleNameLabel, 0,1,1,1);
+        middleNameField = CommonComponent.configureTextField(this, "Middle name", 1, 1, 2, 1);
         //lastname
-        lastNameField = CommonComponent.configureTextField(this, "Last name", 0, 2, 2, 1); 
+        TextLabel lastNameLabel = new TextLabel("Last name:", 12);
+        CommonComponent.addComponent(this, lastNameLabel, 0,2,1,1);
+        lastNameField = CommonComponent.configureTextField(this, "Last name", 1, 2, 2, 1); 
 
         TextLabel birthLabel = new TextLabel("Birth Date: (YYYY/MM/DD)", 12);
         CommonComponent.addComponent(this, birthLabel, 0, 3, 1, 1); 
@@ -36,23 +42,25 @@ public class AddMemberPanel extends JPanel{
         CommonComponent.addComponent(this, dateField, 1, 3, 1, 1); 
 
         TextLabel contactLabel = new TextLabel("Contact Number: ", 12);
-        CommonComponent.addComponent(this, contactLabel, 2, 0, 1, 1); 
+        CommonComponent.addComponent(this, contactLabel, 3, 0, 1, 1); 
         
         contactNumberField = CommonComponent.configureContactNumberField(contactNumberField);
-        CommonComponent.addComponent(this, contactNumberField, 3, 0, 2, 1); 
+        CommonComponent.addComponent(this, contactNumberField, 4, 0, 2, 1); 
 
         TextLabel genderLabel = new TextLabel("Gender:", 12);
-        CommonComponent.addComponent(this, genderLabel, 2, 1, 1, 1); 
+        CommonComponent.addComponent(this, genderLabel, 3, 1, 1, 1); 
         
         gender = new ButtonGroup();
         male = CommonComponent.createRadioButton("Male", "male", gender);
-        CommonComponent.addComponent(this, male, 3, 1, 1, 1); 
+        CommonComponent.addComponent(this, male, 4, 1, 1, 1); 
         female = CommonComponent.createRadioButton("Female", "female", gender);
-        CommonComponent.addComponent(this, female, 4, 1, 1, 1); 
+        CommonComponent.addComponent(this, female, 5, 1, 1, 1); 
 
+        TextLabel membershipLabel = new TextLabel("Select membership", 12);
+        
         selectionDuration = new int[Products.getProductList().size()];
         selection = CommonComponent.configureProductComboBox(selection, selectionDuration, 1);
-        CommonComponent.addComponent(this, selection, 2, 2, 1, 1);
+        CommonComponent.addComponent(this, selection, 4, 2, 1, 1);
         add = new CustomButton("Add", null, e -> addMember(listMemberPanel));
         CommonComponent.addComponent(this, add, 3, 3, 1, 1); 
         clear = new CustomButton("Clear", null, e -> clearForm());

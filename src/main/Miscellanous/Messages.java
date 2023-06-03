@@ -102,4 +102,16 @@ public class Messages {
     public static void equipmentNotDeleted(){
         JOptionPane.showMessageDialog(null, "Equipment cannot be deleted!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void clockInMemberSuccessfully(){
+        JOptionPane.showMessageDialog(null, "Member successfully clock in!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void clockInMemberFailed(){
+        JOptionPane.showMessageDialog(null, "Member failed to clock in!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void memberAlreadyClockedIn(){
+        JOptionPane.showMessageDialog(null, "Member already clocked in!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
 }

@@ -5,7 +5,9 @@ import main.App.Main.SubPanels.*;
 import main.App.Main.SubPanels.AddUpdateList.AddUpdateListPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.AssignTrainerPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListAssignedTrainerPanel;
+import main.App.Main.SubPanels.Attendance.AttendancePanel;
 import main.Miscellanous.Constants;
+import main.Objects.User;
 import main.Properties.Custom.CustomPanel;
 
 public class MainScreenPanel extends JPanel{
@@ -13,17 +15,18 @@ public class MainScreenPanel extends JPanel{
     private CardLayout cardLayout;
     private HomepagePanel homepagePanel;
     private AddUpdateListPanel memberPanel, trainerPanel, equipmentPanel, staffPanel;
-    private CustomPanel attendancePanel, paymentPanel, salesReportPanel;
+    private AttendancePanel attendancePanel;
+    private CustomPanel salesReportPanel;
     private POSPanel posPanel;
 
     private AssignTrainerPanel assignTrainerPanel;
     private ListAssignedTrainerPanel listAssignedTrainerPanel;
 
-    public MainScreenPanel(DashboardPanel dashboardPanel){
+    public MainScreenPanel(User user, DashboardPanel dashboardPanel){
         cardLayout = new CardLayout();
         setLayout(cardLayout);
 
-        homepagePanel = new HomepagePanel(dashboardPanel);
+        homepagePanel = new HomepagePanel(user, dashboardPanel);
         add(homepagePanel, "Homepage");
         memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON, 25);
         add(memberPanel, "Member");
@@ -38,16 +41,15 @@ public class MainScreenPanel extends JPanel{
         equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
         equipmentPanel.removeListButton("Equipment");
         add(equipmentPanel, "Equipment");
-        attendancePanel = new CustomPanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
+        attendancePanel = new AttendancePanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
         add(attendancePanel, "Attendance");
-        paymentPanel = new CustomPanel("Payment", Constants.BLUE_PAYMENT_ICON, 25);
-        add(paymentPanel, "Payment");
         salesReportPanel = new CustomPanel("Sales Report", Constants.BLUE_SALES_REPORT_ICON, 25);
         add(salesReportPanel, "Sales Report");
         staffPanel = new AddUpdateListPanel("Staff", Constants.BLUE_STAFF_ICON, 25);
         add(staffPanel, "Staff");
-        posPanel = new POSPanel();
+        posPanel = new POSPanel(user);
         add(posPanel, "POS");
+
     }
 
     public void showHomepage(DashboardPanel dashboardPanel){

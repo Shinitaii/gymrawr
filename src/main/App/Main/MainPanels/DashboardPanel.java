@@ -5,15 +5,15 @@ import javax.swing.*;
 
 import main.App.Login.LoginWindow;
 import main.Miscellanous.Constants;
+import main.Objects.User;
 import main.Properties.Custom.CustomButton;
 
 public class DashboardPanel extends JPanel{
 
     private MainScreenPanel mainScreenPanel;
     private CustomButton homePage, member, trainers, equipment, attendance, payment, salesReport, staff, pos, logOut;
-    public DashboardPanel(){
+    public DashboardPanel(User user){
         setLayout(new GridLayout(10, 1));
-
         homePage = new CustomButton("Homepage", Constants.scaledImage(Constants.HOMEPAGE_ICON), e -> mainScreenPanel.showHomepage(this));
         add(homePage);
         member = new CustomButton("Members", Constants.scaledImage(Constants.MEMBER_ICON), e -> mainScreenPanel.showMember(this));
@@ -24,8 +24,6 @@ public class DashboardPanel extends JPanel{
         add(equipment);
         attendance = new CustomButton("Attendance", Constants.scaledImage(Constants.ATTENDANCE_ICON), e -> mainScreenPanel.showAttendance(this));
         add(attendance);
-        payment = new CustomButton("Payment", Constants.scaledImage(Constants.PAYMENT_ICON), e -> mainScreenPanel.showPayment(this));
-        add(payment);
         salesReport = new CustomButton("Sales Report", Constants.scaledImage(Constants.SALES_REPORT_ICON), e -> mainScreenPanel.showSalesReport(this));
         add(salesReport);
         staff = new CustomButton("Staff", Constants.scaledImage(Constants.STAFF_ICON), e -> mainScreenPanel.showStaff(this));
@@ -41,6 +39,10 @@ public class DashboardPanel extends JPanel{
         add(logOut);
 
         setActiveButton(homePage);
+
+        if(user.getUserID() == 2){
+            remove(staff);
+        }
     }
 
     private void logOut(){
