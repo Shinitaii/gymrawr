@@ -114,4 +114,8 @@ public class Messages {
     public static void memberAlreadyClockedIn(){
         JOptionPane.showMessageDialog(null, "Member already clocked in!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void receiptGenerated(String code){
+        JOptionPane.showMessageDialog(null, String.format("Receipt generated!\nReceipt code: %s", code), null, 0);
+    }
 }

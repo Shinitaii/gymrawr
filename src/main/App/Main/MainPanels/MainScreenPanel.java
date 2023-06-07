@@ -8,7 +8,6 @@ import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListAssignedTrai
 import main.App.Main.SubPanels.Attendance.AttendancePanel;
 import main.Miscellanous.Constants;
 import main.Objects.User;
-import main.Properties.Custom.CustomPanel;
 
 public class MainScreenPanel extends JPanel{
 
@@ -16,7 +15,7 @@ public class MainScreenPanel extends JPanel{
     private HomepagePanel homepagePanel;
     private AddUpdateListPanel memberPanel, trainerPanel, equipmentPanel, staffPanel;
     private AttendancePanel attendancePanel;
-    private CustomPanel salesReportPanel;
+    private SalesReportPanel salesReportPanel;
     private POSPanel posPanel;
 
     private AssignTrainerPanel assignTrainerPanel;
@@ -31,7 +30,7 @@ public class MainScreenPanel extends JPanel{
         memberPanel = new AddUpdateListPanel("Member", Constants.BLUE_MEMBER_ICON, 25);
         add(memberPanel, "Member");
         trainerPanel = new AddUpdateListPanel("Trainer", Constants.BLUE_TRAINER_ICON, 25);
-        assignTrainerPanel = new AssignTrainerPanel(trainerPanel);
+        assignTrainerPanel = new AssignTrainerPanel(trainerPanel, listAssignedTrainerPanel);
         trainerPanel.add(assignTrainerPanel, "Assign Trainer");
         listAssignedTrainerPanel = new ListAssignedTrainerPanel(trainerPanel);
         trainerPanel.add(listAssignedTrainerPanel, "List Assign Trainer");
@@ -43,11 +42,11 @@ public class MainScreenPanel extends JPanel{
         add(equipmentPanel, "Equipment");
         attendancePanel = new AttendancePanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
         add(attendancePanel, "Attendance");
-        salesReportPanel = new CustomPanel("Sales Report", Constants.BLUE_SALES_REPORT_ICON, 25);
+        salesReportPanel = new SalesReportPanel();
         add(salesReportPanel, "Sales Report");
         staffPanel = new AddUpdateListPanel("Staff", Constants.BLUE_STAFF_ICON, 25);
         add(staffPanel, "Staff");
-        posPanel = new POSPanel(user);
+        posPanel = new POSPanel(user, salesReportPanel);
         add(posPanel, "POS");
 
     }

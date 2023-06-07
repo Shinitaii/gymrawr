@@ -1,33 +1,30 @@
 package main.App.Main.SubPanels;
 import javax.swing.*;
-import main.Miscellanous.CommonComponent;
-import main.Miscellanous.Constants;
-import main.Objects.Products;
-import main.Objects.User;
+import main.Database.MySQL;
+import main.Miscellanous.*;
+import main.Objects.*;
 import main.Properties.Hover;
-import main.Properties.Custom.CustomButton;
-import main.Properties.Custom.TextLabel;
+import main.Properties.Custom.*;
 
 import java.awt.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.sql.*;
+import java.util.*;
 
 public class POSPanel extends JPanel {
     private User user;
-    private ArrayList<String> nameLists;
-    private ArrayList<Double> priceLists;
+    private SalesReportPanel salesReportPanel;
+    private ArrayList<ProductInCart> productInCarts;
     private JPanel productPanel, cartPanel, productTypePanel, buttonPanel;
     private CustomButton allProductButton, membershipButton, trainerButton, equipmentButton;
     private TextLabel totalPriceLabel, paymentPriceLabel, changePriceLabel;
 
     private JPanel orderPanel;
 
-    public POSPanel(User user){
+    public POSPanel(User user, SalesReportPanel salesReportPanel){
         this.user = user;
+        this.salesReportPanel = salesReportPanel;
         setLayout(new BorderLayout());
-        nameLists = new ArrayList<>();
-        priceLists = new ArrayList<>();
+        productInCarts = new ArrayList<>();
         initializeProductPanel();
         initializeCartPanel();
         initializeProductTypePanel();
@@ -47,27 +44,39 @@ public class POSPanel extends JPanel {
             int id = product.getProductID();
             String name = product.getProductName();
             double price = product.getProductPrice();
-
+            int productType = product.getProductType();
+            int duration = product.getProductDayDuration();
+            
+            String productLetter = identifyType(productType);
             if(type == 0 || product.getProductType() == type) {
                 if(x == 2){
                     y++;
                     x = 0;
                 }
-                CustomButton productButton = new CustomButton("<html>"+id + "# - " +name + "<br>Price - ₱"+price+"</html>", null, e->addProductToCart(id, name, price));
-                CommonComponent.addComponent(productPanel, productButton, x, y, 1, 1);
+                CustomButton productButton = new CustomButton("<html>"+id + "# - " +name + "<br>Price - ₱"+price+"</html>", null, e->addProductToCart(orderPanel,id, name, price, duration,productLetter));
+                CommonComponent.addComponent(productPanel, productButton, x, y, 1, 1, GridBagConstraints.NORTH);
                 x++;
             }
         }
         revalidate();
         repaint();
     }
+
+    private String identifyType(int type){
+        if(type == 1) return "M";
+        else if(type == 2) return "T";
+        else if(type == 3) return "E";
+        else return "N";
+    }
     //cartpanels
     private void initializeCartPanel(){
         cartPanel = new JPanel(new BorderLayout());
         cartPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.decode("#08145c")));
         cartPanel.add(new JLabel("-----------------------------------------------------------------"), BorderLayout.NORTH);
-        orderPanel = new JPanel(new GridLayout(0,1));
-        JScrollPane scrollPanel = new JScrollPane(orderPanel);
+        JPanel mainOrderPanel = new JPanel(new BorderLayout());
+        orderPanel = new JPanel(new GridBagLayout());
+        mainOrderPanel.add(orderPanel, BorderLayout.NORTH);
+        JScrollPane scrollPanel = new JScrollPane(mainOrderPanel);
         scrollPanel.setBorder(null);
         cartPanel.add(scrollPanel, BorderLayout.CENTER);
         JPanel bottomPanel = new JPanel(new BorderLayout());
@@ -97,24 +106,33 @@ public class POSPanel extends JPanel {
         add(cartPanel, BorderLayout.EAST);
     }
 
-    private void addProductToCart(int productID, String productName, double productPrice){
-        JPanel productPanel = new JPanel();
-        TextLabel name = new TextLabel(productID + "# - " + productName + ": ₱" + productPrice, 9);
-        productPanel.add(name);
-        CustomButton remove = new CustomButton("", Constants.miniScaleImage(Constants.CANCEL_ICON), e->removeProduct(orderPanel, productPanel, productName, productPrice));
-        productPanel.add(remove);
-        orderPanel.add(productPanel);
-        nameLists.add(productName);
-        priceLists.add(productPrice);
-        updatePricing();
-        revalidate();
-        repaint();
+    private void addProductToCart(JPanel panel, int productID, String productName, double productPrice, int duration, String productType){
+        int y = panel.getComponentCount();
+        try {
+            String input = JOptionPane.showInputDialog(null, "Input quantity:", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+            if(input != null){
+                int quantity = Integer.valueOf(input);
+                JPanel productPanel = new JPanel();
+                TextLabel name = new TextLabel(quantity + "x - " + productID + "# - " + productName + ": ₱" + quantity*productPrice, 9);
+                productPanel.add(name);
+                ProductInCart product = new ProductInCart(productID, productName, productType,quantity, quantity*productPrice, duration);
+                productInCarts.add(product);
+                CustomButton remove = new CustomButton("", Constants.miniScaleImage(Constants.CANCEL_ICON), e->removeProduct(orderPanel, productPanel, product));
+                productPanel.add(remove);
+                CommonComponent.addComponent(orderPanel, productPanel, 0, y, 1, 1);
+                updatePricing();
+                revalidate();
+                repaint();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input.", Constants.APP_TITLE, JOptionPane.ERROR_MESSAGE);
+        }
     }
 
-    private void removeProduct(JPanel mainPanel, JPanel panel,String name, double price){
+    private void removeProduct(JPanel mainPanel, JPanel panel, ProductInCart productInCart){
         mainPanel.remove(panel);
-        nameLists.remove(name);
-        priceLists.remove(price);
+        productInCarts.remove(productInCart);
         updatePricing();
         revalidate();
         repaint();
@@ -122,8 +140,8 @@ public class POSPanel extends JPanel {
 
     private void updatePricing(){
         double sum = 0;
-        for(double price : priceLists){
-            sum+=price;
+        for(ProductInCart product : productInCarts){
+            sum+=product.getPrice();
         }
         totalPriceLabel.setText(String.format("₱%,.2f" , sum));
     }
@@ -149,25 +167,119 @@ public class POSPanel extends JPanel {
     }
 
     private void createReceipt(double amount, double payment){
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy hh:mm:ss a");
-        String formattedDateTime = currentDateTime.format(formatter);
-        System.out.println("------------------------------------");
-        System.out.println("GYM RAWR - " + formattedDateTime);
-        System.out.println("Cashier: " + user.getUsername());
-        System.out.println("------------------------------------");
-        for(int i = 0; i < nameLists.size(); i++){
-            System.out.println("1x - " + nameLists.get(i) + " \t ₱" + priceLists.get(i));
+        System.out.println(getReceiptNumber() + 1);
+        System.out.println(String.format("%010d",getReceiptNumber() + 1));
+        String receiptCode = String.valueOf(String.format("%010d",(getReceiptNumber() + 1))) + combineProductCodes().replaceAll("\\s", "");
+        try (Connection conn = MySQL.getConnection()){
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO receipts VALUES (null, ?, CURRENT_TIMESTAMP, ?, ?, ?, ?)");
+            statement.setString(1, receiptCode);
+            statement.setString(2, user.getUsername());
+            statement.setDouble(3, payment);
+            statement.setDouble(4, amount);
+            statement.setDouble(5, (amount - payment));
+            int rowsAffected = statement.executeUpdate();
+            if(rowsAffected > 0){
+                generateItems();
+                generateProductCodes();
+                Messages.receiptGenerated(receiptCode);
+                clearOrder();
+                salesReportPanel.retrieveReceipts(salesReportPanel.getSortDays().getSelectedIndex());
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Messages.databaseConnectionFailed();
         }
-        System.out.println("------------------------------------");
-        System.out.println("Total: ₱" + amount);
-        System.out.println("Payment: ₱" + payment);
-        System.out.println("Change: ₱" + (amount - payment));
-        System.out.println("------------------------------------");
+    }
+
+    private int getReceiptNumber(){
+        int num = 0;
+        try (Connection conn = MySQL.getConnection()){
+            PreparedStatement statement = conn.prepareStatement("SELECT COUNT(*) as receipt_count FROM receipts");
+            ResultSet result = statement.executeQuery();
+            if(result.next()){
+                num = result.getInt("receipt_count");
+            }
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Messages.databaseConnectionFailed(); 
+        }
+        return num;
+    }
+
+    private String combineProductCodes() {
+        String str = "";
+        Map<String, Integer> typeCountMap = new HashMap<>();
+        for (ProductInCart product : productInCarts) {
+            String productType = product.getCode();
+            int count = typeCountMap.getOrDefault(productType, 1);
+            int duration = product.getDuration();
+            for(int i = 0; i <product.getQuantity(); i++){
+                str += String.format("%s%d-%d ",productType, count, duration);
+                count++;
+                typeCountMap.put(productType, count);
+            }
+        }
+        return str;
+    }
+
+    private String[] getSeperateProductCodes(){
+        return combineProductCodes().split(" ");
+    }
+
+    private void generateProductCodes(){
+        String[] productCodes = getSeperateProductCodes();
+        int quantity = getTotalQuantity();
+        try (Connection conn = MySQL.getConnection()){
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO receipt_codes VALUES (null, ?, ?, ?)");
+            for(int i = 0; i < quantity; i++){
+                statement.setInt(1, getReceiptNumber());
+                statement.setString(2, productCodes[i]);
+                statement.setBoolean(3, false);
+                statement.addBatch();
+            }
+            statement.executeBatch();
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+            Messages.databaseConnectionFailed();
+        }
+    }
+
+    private void generateItems(){
+        try (Connection conn = MySQL.getConnection()){
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO items VALUES (null, ?, ?, ?)");
+            for(ProductInCart product : productInCarts){
+                if(!product.getCode().contains("N")){
+                    statement.setInt(1, getReceiptNumber());
+                    statement.setInt(2, product.getId());
+                    statement.setInt(3, product.getQuantity());
+                    statement.addBatch();
+                }
+            }
+            statement.executeBatch();
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+            Messages.databaseConnectionFailed();
+        }
+    }
+
+    private int getTotalQuantity(){
+        int num = 0;
+        for(ProductInCart product : productInCarts){
+            num+=product.getQuantity();
+        }
+        return num;
     }
 
     private void clearOrder(){
-
+        orderPanel.removeAll();
+        totalPriceLabel.setText("₱0.00");
+        paymentPriceLabel.setText("₱0.00");
+        changePriceLabel.setText("₱0.00");
+        productInCarts.removeAll(productInCarts);
     }
 
     private void initializeProductTypePanel(){

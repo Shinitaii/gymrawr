@@ -3,6 +3,8 @@ package main.Miscellanous;
 import java.awt.*;
 import java.text.*;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.text.*;
 import main.Objects.*;
 import main.Properties.Focus;
@@ -21,11 +23,56 @@ public class CommonComponent {
         panel.add(component, gbc);
     }
 
+    public static void addComponent(JPanel panel, Component component, int gridx, int gridy, int gridwidth, int gridheight, int anchor) {
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = gridx;
+        gbc.gridy = gridy;
+        gbc.gridwidth = gridwidth;
+        gbc.gridheight = gridheight;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = anchor;
+        gbc.insets = new Insets(5, 5, 5, 5);
+        panel.add(component, gbc);
+    }
+
     public static JTextField configureTextField(JPanel panel, String placeholder, int x, int y, int w, int h) {
         JTextField textField = new JTextField(30);
         Focus.setPlaceholder(textField, placeholder);
         textField.addFocusListener(new Focus(textField, placeholder));
         addComponent(panel, textField, x, y, w, h);
+        return textField;
+    }
+
+    public static JTextField configureReceiptNumberField(){
+        JTextField textField = new JTextField();
+        textField.getDocument().addDocumentListener(new DocumentListener() {
+            private void checkAndUpdate() {
+                String text = textField.getText();
+    
+                if (text.length() > 10) {
+                    SwingUtilities.invokeLater(() -> {
+                        textField.setText(text.substring(0, 10));
+                    });
+                }
+            }
+    
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                checkAndUpdate();
+            }
+    
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                checkAndUpdate();
+            }
+    
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                checkAndUpdate();
+            }
+        });
+        textField.setText("0");
+        textField.setColumns(10);
         return textField;
     }
 
