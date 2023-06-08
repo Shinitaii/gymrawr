@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import main.App.Login.LoginWindow;
 import main.Miscellanous.Constants;
+import main.Objects.Products;
 import main.Objects.User;
 import main.Properties.Custom.CustomButton;
 
@@ -50,6 +51,7 @@ public class DashboardPanel extends JPanel{
 			public void run() {
 				try {
 					UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+                    Products.getProductList().clear();
 					LoginWindow window = new LoginWindow();
 					window.getWindow().setVisible(true);
 				} catch (Exception e) {

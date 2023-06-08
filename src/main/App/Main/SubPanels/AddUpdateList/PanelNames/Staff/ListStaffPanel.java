@@ -1,16 +1,17 @@
-package main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer;
+package main.App.Main.SubPanels.AddUpdateList.PanelNames.Staff;
 import java.awt.Dimension;
-import java.sql.*;
+
 import javax.swing.*;
-import javax.swing.table.*;
+import java.sql.*;
+import javax.swing.table.DefaultTableModel;
 
 import main.Database.MySQL;
-public class ListTrainerPanel extends JPanel{
+public class ListStaffPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
 
-    public ListTrainerPanel(){
+    public ListStaffPanel(){
         tableModel = new DefaultTableModel();
         table = new JTable();
         retrieveDataFromDatabase();
@@ -22,7 +23,7 @@ public class ListTrainerPanel extends JPanel{
 
     public void retrieveDataFromDatabase() {
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT trainer_id, concat(trainer_firstname, ' ', trainer_middlename, ' ', trainer_lastname) as fullname, trainer_birthdate, trainer_age, trainer_contactnumber, trainer_gender FROM trainers");
+            PreparedStatement statement = conn.prepareStatement("SELECT staff_id, concat(staff_firstname, ' ', staff_middlename, ' ', staff_lastname) as fullname, staff_birthdate, staff_age, staff_contactnumber, staff_gender, staff_address, staff_educlevel FROM staffs");
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -54,8 +55,8 @@ public class ListTrainerPanel extends JPanel{
     }
 
     private String removePrefix(String columnName) {
-        if (columnName.startsWith("trainer_")) {
-            return columnName.substring(8);
+        if (columnName.startsWith("staff_")) {
+            return columnName.substring(6);
         }
         return columnName;
     }

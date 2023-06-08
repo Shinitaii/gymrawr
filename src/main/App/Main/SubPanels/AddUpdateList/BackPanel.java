@@ -3,6 +3,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
+import main.App.Main.SubPanels.Attendance.AttendancePanel;
 import main.Miscellanous.Constants;
 import main.Properties.Custom.CustomButton;
 import main.Properties.Custom.CustomPanel;
@@ -17,6 +18,7 @@ public class BackPanel extends JPanel{
     }
 
     public BackPanel(CustomPanel customPanel){
+        setLayout(new BorderLayout());
         backButton = new CustomButton("Back", Constants.scaledImage(Constants.BACK_ICON), e -> customPanel.showMain());
         add(backButton, BorderLayout.WEST);
     }

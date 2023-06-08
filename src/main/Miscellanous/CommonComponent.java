@@ -43,6 +43,15 @@ public class CommonComponent {
         return textField;
     }
 
+    public static JPasswordField configurePasswordField(JPanel panel, JCheckBox checkBox,String placeholder, int x, int y, int w, int h) {
+        JPasswordField passwordField = new JPasswordField(30);
+        passwordField.setEchoChar('●');
+        Focus.setPlaceholder(passwordField, placeholder);
+        passwordField.addFocusListener(new Focus(passwordField, checkBox, placeholder));
+        addComponent(panel, passwordField, x, y, w, h);
+        return passwordField;
+    }
+
     public static JTextField configureReceiptNumberField(){
         JTextField textField = new JTextField();
         textField.getDocument().addDocumentListener(new DocumentListener() {

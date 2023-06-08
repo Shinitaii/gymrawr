@@ -120,7 +120,7 @@ public class AddMemberPanel extends JPanel{
     private void addMember(ListMemberPanel listMemberPanel){
         int duration = Integer.valueOf(code.substring(3));
         try(Connection conn = MySQL.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO members VALUES (null, ?, ?, ?, ?, ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY))");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO members VALUES (null, ?, ?, ?,?, YEAR(CURDATE()) - YEAR(member_birthdate) - (DATE_FORMAT(CURDATE(), '00-%m-%d') < DATE_FORMAT(member_birthdate, '00-%m-%d')), ?, ?, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY))");
             statement.setString(1, firstNameField.getText());
             statement.setString(2, middleNameField.getText());
             statement.setString(3, lastNameField.getText());

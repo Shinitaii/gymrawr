@@ -28,8 +28,11 @@ public class AttendanceFormPanel extends JPanel{
         setLayout(new BorderLayout());
         backPanel = new BackPanel(attendancePanel);
         add(backPanel, BorderLayout.NORTH);
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        add(contentPanel, BorderLayout.CENTER);
+
         mainPanel = new JPanel(new GridBagLayout());
-        add(mainPanel, BorderLayout.CENTER);
+        contentPanel.add(mainPanel, BorderLayout.CENTER);
         searchMemberField = CommonComponent.configureTextField(mainPanel, "Search member", 0, 0, 3, 1);
         withNoMiddleName = new JCheckBox("Without middle name?");
         withNoMiddleName.addItemListener(new ItemListener(){

@@ -254,5 +254,7 @@ public class AssignTrainerPanel extends JPanel{
     public void updateMemberTableData() {
         memberTableModel.setRowCount(0);
         initializeMemberModel(memberTableModel, 0);
+        revalidate();
+        repaint();
     }
 }

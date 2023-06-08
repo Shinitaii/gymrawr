@@ -16,6 +16,7 @@ public class Constants {
     public final static ImageIcon BLUE_TRAINER_ICON = new ImageIcon("src/res/blue_trainer.png");
     public final static ImageIcon EQUIPMENT_ICON = new ImageIcon("src/res/equipment.png");
     public final static ImageIcon BLUE_EQUIPMENT_ICON = new ImageIcon("src/res/blue_equipment.png");
+    public final static ImageIcon RESERVE_EQUIPMENT_ICON = new ImageIcon("src/res/reservation.png");
     public final static ImageIcon ATTENDANCE_ICON = new ImageIcon("src/res/attendance.png");
     public final static ImageIcon BLUE_ATTENDANCE_ICON = new ImageIcon("src/res/blue_attendance.png");
     public final static ImageIcon ATTENDANCE_FORM_ICON = new ImageIcon("src/res/attendance/attendance_form.png");

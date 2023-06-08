@@ -116,6 +116,14 @@ public class Messages {
     }
 
     public static void receiptGenerated(String code){
-        JOptionPane.showMessageDialog(null, String.format("Receipt generated!\nReceipt code: %s", code), null, 0);
+        JOptionPane.showMessageDialog(null, String.format("Receipt generated!\nReceipt code: %s", code), Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void userAdded(){
+        JOptionPane.showMessageDialog(null, "Successfully added a new user!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void userAddFailed(){
+        JOptionPane.showMessageDialog(null, "Failed to add a new user!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
 }

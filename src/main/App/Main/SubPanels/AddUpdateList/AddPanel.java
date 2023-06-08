@@ -5,6 +5,7 @@ import javax.swing.*;
 
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment.AddEquipmentPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Member.AddMemberPanel;
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Staff.AddStaffPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.AddTrainerPanel;
 
 public class AddPanel extends JPanel {
@@ -21,7 +22,7 @@ public class AddPanel extends JPanel {
         if(panelName.equals("Member")) member(listPanel);
         else if (panelName.equals("Trainer")) trainer(listPanel);
         else if (panelName.equals("Equipment")) equipment(updatePanel, listPanel);
-        else staff(); //if panel name is Staff
+        else if (panelName.equals("Staff")) staff(listPanel); //if panel name is Staff
     }
 
     private void member(ListPanel listPanel){
@@ -39,7 +40,8 @@ public class AddPanel extends JPanel {
         add(equipmentPanel, BorderLayout.CENTER);
     }
 
-    private void staff(){
-
+    private void staff(ListPanel listPanel){
+        AddStaffPanel staffPanel = new AddStaffPanel(listPanel.getListStaffPanel());
+        add(staffPanel, BorderLayout.CENTER);
     }
 }

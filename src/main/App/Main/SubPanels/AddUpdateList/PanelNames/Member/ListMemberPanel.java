@@ -23,7 +23,7 @@ public class ListMemberPanel extends JPanel{
 
     public void retrieveDataFromDatabase() {
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT member_id, concat(member_firstname, ' ', member_middlename, ' ', member_lastname) as fullname, member_birthdate, member_contactnumber, member_gender, membership_startdate, membership_enddate FROM members");
+            PreparedStatement statement = conn.prepareStatement("SELECT member_id, concat(member_firstname, ' ', member_middlename, ' ', member_lastname) as fullname, member_birthdate, member_age, member_contactnumber, member_gender, membership_startdate, membership_enddate FROM members");
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();

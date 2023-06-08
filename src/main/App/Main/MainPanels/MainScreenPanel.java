@@ -38,6 +38,8 @@ public class MainScreenPanel extends JPanel{
         trainerPanel.addButton("List of Assigned Trainer", Constants.LIST_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "List Assign Trainer"));
         add(trainerPanel, "Trainer");
         equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
+        equipmentPanel.addButton("Reserve Equipment", Constants.RESERVE_EQUIPMENT_ICON, e -> reserveEquipment());
+        equipmentPanel.addButton("List of Reserve Equipment", Constants.LIST_ICON, e -> equipmentPanel.getCardLayout().show(equipmentPanel, "List Reserve Equipment"));
         equipmentPanel.removeListButton("Equipment");
         add(equipmentPanel, "Equipment");
         attendancePanel = new AttendancePanel("Attendance", Constants.BLUE_ATTENDANCE_ICON, 25);
@@ -99,5 +101,9 @@ public class MainScreenPanel extends JPanel{
     private void assignTrainer(){
         trainerPanel.getCardLayout().show(trainerPanel, "Assign Trainer");
         assignTrainerPanel.updateMemberTableData();
+    }
+    
+    private void reserveEquipment(){
+        equipmentPanel.getCardLayout().show(equipmentPanel, "Reserve Equipment");
     }
 }
