@@ -49,8 +49,8 @@ public class AttendanceRecordPanel extends JPanel{
 
     public void retrieveDataFromDatabase(int select) {
         String sql = "";
-        if(select == 1) sql = "SELECT attendances.attendance_id, concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) as fullname, attendances.attendance_date FROM attendances JOIN members ON members.member_id = attendances.member_id";
-        else sql = "SELECT attendances.attendance_id, concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) AS fullname, attendances.attendance_date FROM attendances JOIN members ON members.member_id = attendances.member_id WHERE concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) = ? ";
+        if(select == 1) sql = "SELECT attendances.attendance_id, concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) as fullname, date(attendances.attendance_date) as attendance_date, time(attendances.attendance_date) as attendance_time FROM attendances JOIN members ON members.member_id = attendances.member_id";
+        else sql = "SELECT attendances.attendance_id, concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) AS fullname, date(attendances.attendance_date) as attendance_date, time(attendances.attendance_date) as attendance_time FROM attendances JOIN members ON members.member_id = attendances.member_id WHERE concat(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) = ? ";
         try (Connection conn = MySQL.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
             if(select == 0) statement.setString(1, searchMemberField.getText());

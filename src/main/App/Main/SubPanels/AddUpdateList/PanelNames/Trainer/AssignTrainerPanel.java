@@ -150,20 +150,22 @@ public class AssignTrainerPanel extends JPanel{
         int duration = Integer.valueOf(code.substring(3));
         String memberName = getName(memberTable);
         String trainerName = getName(trainerTable);
-        try (Connection conn = MySQL.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO appointments SELECT null, (SELECT trainer_id from trainers), (SELECT member_id from members), CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY) FROM members, trainers WHERE CONCAT(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) = ? and CONCAT(trainers.trainer_firstname, ' ', trainers.trainer_middlename, ' ', trainers.trainer_lastname) = ?");
-            statement.setInt(1, duration);
-            statement.setString(2, memberName);
-            statement.setString(3, trainerName);
+        try (Connection conn = MySQL.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO appointments SELECT NULL, ts.trainer_id, ?, m.member_id, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY) FROM trainer_specialization ts JOIN trainers t ON ts.trainer_id = t.trainer_id CROSS JOIN members m LEFT JOIN appointments a ON ts.trainer_id = a.trainer_id AND m.member_id = a.member_id WHERE CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) = ? AND CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) = ? AND a.appointment_id IS NULL;");
+            statement.setInt(1, selectionID[selection.getSelectedIndex()]);
+            statement.setInt(2, duration);
+            statement.setString(3, memberName);
+            statement.setString(4, trainerName);
             int rowsAffected = statement.executeUpdate();
-            if(rowsAffected > 0) {
+            if (rowsAffected > 0) {
                 Messages.trainerAssignSuccess();
-                for(Component component : formPanel.getComponents()){
+                for (Component component : formPanel.getComponents()) {
                     component.setEnabled(false);
                 }
                 listAssignedTrainerPanel.retrieveDataFromDatabase();
+            } else {
+                Messages.trainerAssignFailed();
             }
-            else Messages.trainerAssignFailed();
             conn.close();
         } catch (SQLException e) {
             Messages.databaseConnectionFailed();
@@ -223,8 +225,10 @@ public class AssignTrainerPanel extends JPanel{
     private DefaultTableModel initializeTrainerModel(DefaultTableModel tableModel, int selectionID){
         tableModel = new DefaultTableModel();
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(trainer_firstname, ' ', trainer_middlename, ' ', trainer_lastname) AS fullname_trainers FROM trainers LEFT JOIN appointments ON trainers.trainer_id = appointments.trainer_id WHERE appointments.trainer_id IS NULL and trainers.training_id = ?;");
+            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS fullname_trainers, ts.trainer_id FROM trainer_specialization ts JOIN trainers t ON ts.trainer_id = t.trainer_id LEFT JOIN appointments a ON ts.trainer_id = a.trainer_id WHERE a.trainer_id IS NULL AND ts.training_id = ? AND t.trainer_id NOT IN (SELECT trainer_id FROM appointments WHERE training_id = ?);");
             statement.setInt(1, selectionID);
+            statement.setInt(2, selectionID);
+
             ResultSet result = statement.executeQuery();
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();

@@ -16,8 +16,6 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import com.mysql.cj.x.protobuf.MysqlxPrepare.Prepare;
-
 public class AddTrainerPanel extends JPanel {
 
     private JTextField firstNameField, middleNameField, lastNameField;

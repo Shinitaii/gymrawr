@@ -2,8 +2,6 @@ package main.App.Main.SubPanels.AddUpdateList;
 import java.awt.BorderLayout;
 
 import javax.swing.*;
-
-import main.App.Main.SubPanels.Attendance.AttendancePanel;
 import main.Miscellanous.Constants;
 import main.Properties.Custom.CustomButton;
 import main.Properties.Custom.CustomPanel;

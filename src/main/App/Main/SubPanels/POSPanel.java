@@ -53,7 +53,7 @@ public class POSPanel extends JPanel {
                     y++;
                     x = 0;
                 }
-                CustomButton productButton = new CustomButton("<html>"+id + "# - " +name + "<br>Price - ₱"+price+"</html>", null, e->addProductToCart(orderPanel,id, name, price, duration,productLetter));
+                CustomButton productButton = new CustomButton("<html><p style='font-size: 9px;'>"+id + "# - " +name + "<br>Price - ₱"+price+"</p></html>", null, e->addProductToCart(orderPanel,id, name, price, duration,productLetter));
                 CommonComponent.addComponent(productPanel, productButton, x, y, 1, 1, GridBagConstraints.NORTH);
                 x++;
             }
@@ -72,7 +72,7 @@ public class POSPanel extends JPanel {
     private void initializeCartPanel(){
         cartPanel = new JPanel(new BorderLayout());
         cartPanel.setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, Color.decode("#08145c")));
-        cartPanel.add(new JLabel("-----------------------------------------------------------------"), BorderLayout.NORTH);
+        cartPanel.add(new JLabel("---------------------------------------------------------------------"), BorderLayout.NORTH);
         JPanel mainOrderPanel = new JPanel(new BorderLayout());
         orderPanel = new JPanel(new GridBagLayout());
         mainOrderPanel.add(orderPanel, BorderLayout.NORTH);
@@ -81,15 +81,17 @@ public class POSPanel extends JPanel {
         cartPanel.add(scrollPanel, BorderLayout.CENTER);
         JPanel bottomPanel = new JPanel(new BorderLayout());
         JPanel totalPanel = new JPanel(new GridLayout(0,2));
-        TextLabel totalLabel = new TextLabel("Total: ", 12);
+        TextLabel totalLabel = new TextLabel("<html><b>Total:</b></html>", 12);
+        totalLabel.setForeground(Color.RED);
         totalPanel.add(totalLabel);
         totalPriceLabel = new TextLabel("₱0.00", 12);
+        totalPriceLabel.setForeground(Color.RED);
         totalPanel.add(totalPriceLabel);
-        TextLabel paymentLabel = new TextLabel("Payment: ", 12);
+        TextLabel paymentLabel = new TextLabel("<html><b>Payment:</b></html>", 12);
         totalPanel.add(paymentLabel);
         paymentPriceLabel = new TextLabel("₱0.00", 12);
         totalPanel.add(paymentPriceLabel);
-        TextLabel changeLabel = new TextLabel("Change: ", 12);
+        TextLabel changeLabel = new TextLabel("<html><b>Change:</b></html>", 12);
         totalPanel.add(changeLabel);
         changePriceLabel = new TextLabel("₱0.00", 12);
         totalPanel.add(changePriceLabel);
@@ -98,7 +100,7 @@ public class POSPanel extends JPanel {
         CustomButton done = new CustomButton("", Constants.DONE_ICON, e->getPayment());
         buttonPanel.add(done);
         CustomButton cancel = new CustomButton("", Constants.CANCEL_ICON, e->clearOrder());
-        cancel.setBackground(Color.GRAY);
+        cancel.setBackground(Color.RED);
         cancel.addMouseListener(new Hover(cancel));
         buttonPanel.add(cancel);
         bottomPanel.add(buttonPanel, BorderLayout.SOUTH);
@@ -113,11 +115,13 @@ public class POSPanel extends JPanel {
             if(input != null){
                 int quantity = Integer.valueOf(input);
                 JPanel productPanel = new JPanel();
-                TextLabel name = new TextLabel(quantity + "x - " + productID + "# - " + productName + ": ₱" + quantity*productPrice, 9);
+                TextLabel name = new TextLabel(quantity + "x - " + productID + "# - " + productName + ": ₱" + quantity*productPrice, 12);
                 productPanel.add(name);
                 ProductInCart product = new ProductInCart(productID, productName, productType,quantity, quantity*productPrice, duration);
                 productInCarts.add(product);
                 CustomButton remove = new CustomButton("", Constants.miniScaleImage(Constants.CANCEL_ICON), e->removeProduct(orderPanel, productPanel, product));
+                remove.setBackground(Color.RED);
+                remove.addMouseListener(new Hover(remove));
                 productPanel.add(remove);
                 CommonComponent.addComponent(orderPanel, productPanel, 0, y, 1, 1);
                 updatePricing();
@@ -284,7 +288,7 @@ public class POSPanel extends JPanel {
 
     private void initializeProductTypePanel(){
         productTypePanel = new JPanel();
-        productTypePanel.setBackground(Color.decode("#08145c").brighter().brighter());
+        productTypePanel.setBackground(Color.decode("#08145c"));
         allProductButton = new CustomButton("All Products", null, e -> showProducts(0));
         CommonComponent.addComponent(productTypePanel, allProductButton, 0, 0, 1, 1);
         membershipButton = new CustomButton("Membership", null, e -> showProducts(1));

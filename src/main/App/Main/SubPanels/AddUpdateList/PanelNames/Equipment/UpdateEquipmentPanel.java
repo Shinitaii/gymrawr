@@ -29,6 +29,7 @@ public UpdateEquipmentPanel(){
     setLayout(new GridBagLayout());
     tableModel = new DefaultTableModel();
     table = new JTable();
+    table.setModel(tableModel);
     table.getTableHeader().setReorderingAllowed(false);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     scrollPane = new JScrollPane(table);
@@ -43,7 +44,7 @@ public UpdateEquipmentPanel(){
     searchEquipment = new CustomButton("Search equipment", null, e -> searchEquipment());
     CommonComponent.addComponent(this, searchEquipment, 2, 2, 1, 1);
 
-    retrieveDataFromDatabase(2);
+    retrieveDataFromDatabase(0);
     table.addMouseListener(new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
             JTable target = (JTable) e.getSource();
@@ -53,9 +54,8 @@ public UpdateEquipmentPanel(){
                 if (e.getClickCount() == 2) {
                     int equipmentID = getIntTableValue(target, selectedRow, 0);
                     String availablity = getStringTableValue(target, selectedRow, 3);
-                    int option = JOptionPane.showOptionDialog(null, "Select action", Constants.APP_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{ "Change Availability", "Delete", "Cancel"}, null);
+                    int option = JOptionPane.showOptionDialog(null, "Select action", Constants.APP_TITLE, JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, new Object[]{ "Change Availability", "Cancel"}, null);
                     if(option == 0) updateAvailability(equipmentID, availablity);
-                    else if(option == 1) deleteEquipment(equipmentID);
                 }
             }
         }
@@ -88,29 +88,13 @@ public UpdateEquipmentPanel(){
         }
     }
 
-    private void deleteEquipment(int id){
-        try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("delete from equipments where equipment_id = ?");
-            statement.setInt(1, id);
-            int rowsAffected = statement.executeUpdate();
-            if(rowsAffected > 0){
-                Messages.equipmentDeleted();
-                searchEquipment();
-            } else Messages.equipmentNotDeleted();
-        } catch (SQLException e){
-            Messages.databaseConnectionFailed();
-            e.printStackTrace();
-        }
-    }
-
     public void searchEquipment(){
         int select;
+        
         if (selection.getSelectedItem().equals("Sort all items")) {
-            if (!equipmentNameField.getText().equals("Equipment name")) select = 3;
-            else select = 2;
+            select = 0;
         } else {
-            if (selection.getSelectedIndex() > 0 && equipmentNameField.getText().equals("Equipment name")) select = 1;
-            else select = 0;
+            select = selection.getSelectedIndex();
         }
 
         retrieveDataFromDatabase(select);
@@ -118,20 +102,18 @@ public UpdateEquipmentPanel(){
 
     private void retrieveDataFromDatabase(int select) {
         tableModel.setRowCount(0);
-        String sql = "";
-        if(select == 1) sql = "select * from equipments where equipment_type_id = ?"; // combobox only
-        else if(select == 0) sql = "select * from equipments where equipment_name like ? and equipment_type_id = ?";
-        else if(select == 2) sql = "select * from equipments";
-        else sql = "select * from equipments where equipment_name like ?";
+        String equipmentName = "";
+        if(equipmentNameField.getText().equals("Equipment name")) equipmentName = "";
+        else equipmentName = equipmentNameField.getText();
+        String sql = "SELECT e.equipment_id, et.equipment_type_name, e.equipment_name, e.equipment_availability FROM equipments e JOIN equipment_types et ON e.equipment_type_id = et.equipment_type_id WHERE et.equipment_type_id = ?";
+        if(!equipmentNameField.getText().equals("Equipment name")) sql += " AND e.equipment_name = ?";
         try (Connection conn = MySQL.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
-            if(select == 1) statement.setInt(1, selectionEquipmentType[selection.getSelectedIndex()]);
-            else if (select == 0){
-                statement.setString(1, "%" + equipmentNameField.getText() + "%");
-                statement.setInt(2, selectionEquipmentType[selection.getSelectedIndex()]);
-            } else if (select == 3){
-                statement.setString(1, "%" + equipmentNameField.getText() + "%");
+            statement.setInt(1, selectionEquipmentType[select]);
+            if(!equipmentNameField.getText().equals("Equipment name")){
+                statement.setString(1, "%" + equipmentName + "%");
             }
+            System.out.println("SQL Query: " + statement.toString());
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();

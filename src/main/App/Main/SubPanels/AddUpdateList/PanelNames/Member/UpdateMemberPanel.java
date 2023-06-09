@@ -7,8 +7,6 @@ import javax.swing.table.DefaultTableModel;
 
 import main.Database.MySQL;
 import main.Miscellanous.*;
-import main.Objects.Item;
-import main.Objects.Products;
 import main.Properties.Focus;
 import main.Properties.Custom.*;
 
@@ -21,8 +19,6 @@ public class UpdateMemberPanel extends JPanel{
     private JTextField firstNameField, middleNameField, lastNameField;
     private JFormattedTextField dateField, contactNumberField;
     private CustomButton update, clear, cancel;
-
-    private int[] selectionDuration;
     private JTable table;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
@@ -30,7 +26,6 @@ public class UpdateMemberPanel extends JPanel{
     private CustomButton search;
     private JCheckBox ifRenewal;
     private TextLabel duration;
-    private String code;
 
     public UpdateMemberPanel(){
         searchMemberPanel = new JPanel(new GridBagLayout());

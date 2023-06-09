@@ -64,6 +64,7 @@ public class SalesReportPanel extends JPanel {
         backPanel.add(back);
         receiptPanel.add(backPanel, BorderLayout.NORTH);
         receiptTextArea = new JTextArea();
+        receiptTextArea.setForeground(Color.decode("#08145c"));
         receiptPanel.add(receiptTextArea, BorderLayout.CENTER);
 
         retrieveReceipts(0);
@@ -109,7 +110,9 @@ public class SalesReportPanel extends JPanel {
                 statement.setDate(2, Date.valueOf(end));
             }
             ResultSet resultSet = statement.executeQuery();
+            double sum = 0;
             while (resultSet.next()) {
+                sum += resultSet.getDouble("receipt_total_price");
                 Object[] rowData = new Object[]{
                     resultSet.getString("receipt_code").substring(0, 10),
                     resultSet.getString("receipt_code").substring(10),
@@ -118,6 +121,7 @@ public class SalesReportPanel extends JPanel {
                 };
                 tableModel.addRow(rowData);
             }
+            salesLabelPrice.setText("₱"+sum);
             revalidate();
             repaint();
             conn.close();

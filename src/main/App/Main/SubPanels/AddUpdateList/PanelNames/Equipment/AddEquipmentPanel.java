@@ -28,17 +28,19 @@ public class AddEquipmentPanel extends JPanel{
         CommonComponent.addComponent(this, equipmentNameLabel, 0, 0, 1, 1);
         equipmentNameField = CommonComponent.configureTextField(this, "Equipment name", 1, 0, 1, 1);
         equipmentQuantityLabel = new TextLabel("Enter the quantity:", 12);
-        CommonComponent.addComponent(this, equipmentQuantityLabel, 1, 0, 1, 1);
+        CommonComponent.addComponent(this, equipmentQuantityLabel, 2, 0, 1, 1);
         equipmentQuantity = CommonComponent.configureNumberField(equipmentQuantity);
-        CommonComponent.addComponent(this, equipmentQuantity, 2, 0, 1, 1);
+        CommonComponent.addComponent(this, equipmentQuantity, 3, 0, 1, 1);
         selectionEquipmentType = new int[EquipmentType.getEquipmentTypeList().size()];
+        TextLabel selectionLabel = new TextLabel("Enter the quantity:", 12);
+        CommonComponent.addComponent(this, selectionLabel, 0, 1, 1, 1);
         selection = CommonComponent.configureEquipmentTypeComboBox(selection, selectionEquipmentType);
-        CommonComponent.addComponent(this, selection, 0, 1, 1, 1);
+        CommonComponent.addComponent(this, selection, 1, 1, 1, 1);
 
         add = new CustomButton("Add", null, e -> addEquipment(updatePanel.getUpdateEquipmentPanel()));
-        CommonComponent.addComponent(this, add, 1, 1, 1, 1); 
+        CommonComponent.addComponent(this, add, 2, 1, 1, 1); 
         clear = new CustomButton("Clear", null, e -> clearForm());
-        CommonComponent.addComponent(this, clear, 2,1, 1, 1);
+        CommonComponent.addComponent(this, clear, 3,1, 1, 1);
     }
 
     private void addEquipment(UpdateEquipmentPanel updateEquipmentList){

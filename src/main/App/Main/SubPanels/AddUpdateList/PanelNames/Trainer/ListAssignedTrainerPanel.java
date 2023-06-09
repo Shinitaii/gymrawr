@@ -31,7 +31,7 @@ public class ListAssignedTrainerPanel extends JPanel {
 
     public void retrieveDataFromDatabase() {
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(members.member_firstname, ' ', members.member_middlename, ' ', members.member_lastname) AS member_fullname, CONCAT(trainers.trainer_firstname, ' ', trainers.trainer_middlename, ' ', trainers.trainer_lastname) AS trainer_fullname, appointment_startdate, appointment_enddate FROM appointments INNER JOIN members ON appointments.member_id = members.member_id INNER JOIN trainers ON appointments.trainer_id = trainers.trainer_id");
+            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) AS member_fullname, CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS trainer_fullname, tr.training_name, a.appointment_startdate, a.appointment_enddate FROM appointments a INNER JOIN members m ON a.member_id = m.member_id INNER JOIN trainer_specialization ts ON a.trainer_id = ts.trainer_id INNER JOIN trainers t ON ts.trainer_id = t.trainer_id INNER JOIN trainings tr ON ts.training_id = tr.training_id");
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
