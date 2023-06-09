@@ -36,28 +36,33 @@ public class AttendanceFormPanel extends JPanel{
         clockInMemberButton.setEnabled(false);
     }
 
-    private void searchMember(){
-        if(!searchAttendance()){
+    private void searchMember() {
+        if (!searchAttendance()) {
+            boolean memberFound = false;
             try (Connection conn = MySQL.getConnection()) {
-                PreparedStatement statement = conn.prepareStatement("select member_id, concat(member_firstname, ' ', member_middlename, ' ', member_lastname) as full_name from members where not exists (select * from attendances where attendances.member_id = members.member_id and date(attendances.attendance_date) = curdate()) and concat(member_firstname, ' ', member_middlename, ' ', member_lastname) = ?");
+                PreparedStatement statement = conn.prepareStatement("SELECT member_id, CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS full_name FROM members WHERE NOT EXISTS (SELECT * FROM attendances WHERE attendances.member_id = members.member_id AND DATE(attendances.attendance_date) = CURDATE()) AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) = ?");
                 statement.setString(1, searchMemberField.getText());
                 ResultSet resultSet = statement.executeQuery();
-                if(resultSet.next()){
+                if (resultSet.next()) {
                     memberID = resultSet.getInt("member_id");
-                    Messages.memberFound();
+                    memberFound = true;
                     clockInMemberButton.setEnabled(true);
                     revalidate();
                     repaint();
-                } else {
-                    Messages.memberNotFound();
-                    clockInMemberButton.setEnabled(false);
                 }
                 conn.close();
             } catch (SQLException e) {
                 Messages.databaseConnectionFailed();
                 e.printStackTrace();
             }
-        }
+
+            if (memberFound) {
+                Messages.memberFound();
+            } else {
+                Messages.memberNotFound();
+                clockInMemberButton.setEnabled(false);
+            }
+        } else clockInMemberButton.setEnabled(false);
     }
 
     private boolean searchAttendance(){
@@ -70,7 +75,7 @@ public class AttendanceFormPanel extends JPanel{
                 revalidate();
                 repaint();
                 return true;
-            } else Messages.memberNotFound();
+            }
             conn.close();
             return false;
         } catch (SQLException e) {
@@ -87,7 +92,6 @@ public class AttendanceFormPanel extends JPanel{
             int rowsAffected = statement.executeUpdate();
             if(rowsAffected > 0) {
                 Messages.clockInMemberSuccessfully();
-                memberID = 0;
             } else Messages.clockInMemberFailed();
             conn.close();
         } catch (SQLException e){

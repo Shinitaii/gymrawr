@@ -85,6 +85,21 @@ public class AssignTrainerPanel extends JPanel{
         }
     }
 
+    private void disableProduct(String code){
+        try(Connection conn = MySQL.getConnection()){
+            String receipt = receiptNumberField.getText().toString();
+            String trimmedString = receipt.replaceFirst("^0+", "");
+            PreparedStatement statement = conn.prepareStatement("UPDATE receipt_codes set is_used = true where receipt_id = ? and product_code = ?");
+            statement.setInt(1, Integer.valueOf(trimmedString));
+            statement.setString(2, code);
+            statement.executeUpdate();
+            conn.close();
+        } catch(SQLException e){
+            e.printStackTrace();
+            Messages.databaseConnectionFailed();
+        }
+    }
+
     private void searchReceipt(){
         productCodeSelection.removeAllItems();
         try(Connection conn = MySQL.getConnection()){
@@ -162,6 +177,8 @@ public class AssignTrainerPanel extends JPanel{
                 for (Component component : formPanel.getComponents()) {
                     component.setEnabled(false);
                 }
+                disableProduct(code);
+                searchReceipt();
                 listAssignedTrainerPanel.retrieveDataFromDatabase();
             } else {
                 Messages.trainerAssignFailed();

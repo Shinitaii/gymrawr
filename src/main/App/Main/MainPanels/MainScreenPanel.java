@@ -3,6 +3,8 @@ import java.awt.CardLayout;
 import javax.swing.*;
 import main.App.Main.SubPanels.*;
 import main.App.Main.SubPanels.AddUpdateList.AddUpdateListPanel;
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment.ListReserveEquipmentPanel;
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment.ReserveEquipmentPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.AssignTrainerPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListAssignedTrainerPanel;
 import main.App.Main.SubPanels.Attendance.AttendancePanel;
@@ -20,6 +22,8 @@ public class MainScreenPanel extends JPanel{
 
     private AssignTrainerPanel assignTrainerPanel;
     private ListAssignedTrainerPanel listAssignedTrainerPanel;
+    private ReserveEquipmentPanel reserveEquipmentPanel;
+    private ListReserveEquipmentPanel listReserveEquipmentPanel;
 
     public MainScreenPanel(User user, DashboardPanel dashboardPanel){
         cardLayout = new CardLayout();
@@ -38,6 +42,8 @@ public class MainScreenPanel extends JPanel{
         trainerPanel.addButton("List of Assigned Trainer", Constants.LIST_ICON, e -> trainerPanel.getCardLayout().show(trainerPanel, "List Assign Trainer"));
         add(trainerPanel, "Trainer");
         equipmentPanel = new AddUpdateListPanel("Equipment", Constants.BLUE_EQUIPMENT_ICON, 25);
+        reserveEquipmentPanel = new ReserveEquipmentPanel(equipmentPanel, listReserveEquipmentPanel);
+        equipmentPanel.add(reserveEquipmentPanel, "Reserve Equipment");
         equipmentPanel.addButton("Reserve Equipment", Constants.RESERVE_EQUIPMENT_ICON, e -> reserveEquipment());
         equipmentPanel.addButton("List of Reserve Equipment", Constants.LIST_ICON, e -> equipmentPanel.getCardLayout().show(equipmentPanel, "List Reserve Equipment"));
         equipmentPanel.removeListButton("Equipment");
@@ -105,5 +111,6 @@ public class MainScreenPanel extends JPanel{
     
     private void reserveEquipment(){
         equipmentPanel.getCardLayout().show(equipmentPanel, "Reserve Equipment");
+        reserveEquipmentPanel.updateMemberTableData();
     }
 }

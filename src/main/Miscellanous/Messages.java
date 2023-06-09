@@ -126,4 +126,12 @@ public class Messages {
     public static void userAddFailed(){
         JOptionPane.showMessageDialog(null, "Failed to add a new user!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void equipmentAssignSuccess(){
+        JOptionPane.showMessageDialog(null, "Equipment successfully assigned to member!", Constants.APP_TITLE, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void equipmentAssignFailed(){
+        JOptionPane.showMessageDialog(null, "Equipment failed to assign to a member!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
 }
