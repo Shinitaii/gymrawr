@@ -29,9 +29,46 @@ public class ListAssignedTrainerPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    public void retrieveDataFromDatabase() {
+    public void retrieveDataFromDatabase(int training, int member, int trainer) {
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) AS member_fullname, CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS trainer_fullname, tr.training_name, a.appointment_startdate, a.appointment_enddate FROM appointments a INNER JOIN members m ON a.member_id = m.member_id INNER JOIN trainer_specialization ts ON a.trainer_id = ts.trainer_id INNER JOIN trainers t ON ts.trainer_id = t.trainer_id INNER JOIN trainings tr ON ts.training_id = tr.training_id");
+            PreparedStatement statement = conn.prepareStatement("SELECT a.appointment_id, CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) AS member_fullname, CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS trainer_fullname, tr.training_name, a.appointment_startdate, a.appointment_enddate FROM appointments a INNER JOIN members m ON a.member_id = m.member_id INNER JOIN trainer_specialization ts ON a.trainer_id = ts.trainer_id inner join trainers t on ts.trainer_id = t.trainer_id inner join trainings tr on ts.training_id = tr.training_id where ts.training_id = ? and m.member_id = ? and ts.trainer_id = ?;");
+            statement.setInt(1, training);
+            statement.setInt(2, member);
+            statement.setInt(3, trainer);
+            ResultSet resultSet = statement.executeQuery();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+            int columnCount = metaData.getColumnCount();
+
+            Object[] columnNames = new Object[columnCount];
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = metaData.getColumnName(i);
+                columnNames[i - 1] = removePrefix(columnName);
+            }
+            tableModel.setColumnIdentifiers(columnNames);
+
+            while (resultSet.next()) {
+                Object[] rowData = new Object[columnCount];
+                for (int i = 1; i <= columnCount; i++) {
+                    rowData[i - 1] = resultSet.getObject(i);
+                }
+                tableModel.addRow(rowData);
+            }
+
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        table.setModel(tableModel);
+
+        table.repaint();
+        table.revalidate();
+    }
+
+    public void retrieveDataFromDatabase() {
+        tableModel.setRowCount(0);
+        try (Connection conn = MySQL.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("SELECT a.appointment_id, CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) AS member_fullname, CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS trainer_fullname, tr.training_name, a.appointment_startdate, a.appointment_enddate FROM appointments a INNER JOIN members m ON a.member_id = m.member_id INNER JOIN trainer_specialization ts ON a.trainer_id = ts.trainer_id inner join trainers t on ts.trainer_id = t.trainer_id inner join (SELECT DISTINCT training_id FROM appointments) sub ON ts.training_id = sub.training_id inner join trainings tr on ts.training_id = tr.training_id order by appointment_id;");
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();

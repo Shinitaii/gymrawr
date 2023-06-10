@@ -134,4 +134,12 @@ public class Messages {
     public static void equipmentAssignFailed(){
         JOptionPane.showMessageDialog(null, "Equipment failed to assign to a member!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
     }
+
+    public static void nameFieldError(){
+        JOptionPane.showMessageDialog(null, "Enter all names in the field!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void genderError(){
+        JOptionPane.showMessageDialog(null, "Select a gender!", Constants.APP_TITLE, JOptionPane.WARNING_MESSAGE);
+    }
 }

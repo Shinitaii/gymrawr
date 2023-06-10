@@ -64,6 +64,7 @@ public class SalesReportPanel extends JPanel {
         backPanel.add(back);
         receiptPanel.add(backPanel, BorderLayout.NORTH);
         receiptTextArea = new JTextArea();
+        receiptTextArea.setEditable(false);
         receiptTextArea.setForeground(Color.decode("#08145c"));
         receiptPanel.add(receiptTextArea, BorderLayout.CENTER);
 

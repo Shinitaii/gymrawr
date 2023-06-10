@@ -28,11 +28,11 @@ public class AttendanceFormPanel extends JPanel{
 
         mainPanel = new JPanel(new GridBagLayout());
         contentPanel.add(mainPanel, BorderLayout.CENTER);
-        searchMemberField = CommonComponent.configureTextField(mainPanel, "Search member", 0, 0, 3, 1);
+        searchMemberField = CommonComponent.configureTextField(mainPanel, "Search member", 0, 1, 3, 1);
         searchButton = new CustomButton("Search member", null, e -> searchMember());
-        CommonComponent.addComponent(mainPanel, searchButton, 1, 1, 1, 1);
+        CommonComponent.addComponent(mainPanel, searchButton, 1, 2, 1, 1);
         clockInMemberButton = new CustomButton("Clock-in member", null, e -> clockInMember());
-        CommonComponent.addComponent(mainPanel, clockInMemberButton, 2, 1,1,1);
+        CommonComponent.addComponent(mainPanel, clockInMemberButton, 2, 2,1,1);
         clockInMemberButton.setEnabled(false);
     }
 
@@ -40,8 +40,8 @@ public class AttendanceFormPanel extends JPanel{
         if (!searchAttendance()) {
             boolean memberFound = false;
             try (Connection conn = MySQL.getConnection()) {
-                PreparedStatement statement = conn.prepareStatement("SELECT member_id, CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS full_name FROM members WHERE NOT EXISTS (SELECT * FROM attendances WHERE attendances.member_id = members.member_id AND DATE(attendances.attendance_date) = CURDATE()) AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) = ?");
-                statement.setString(1, searchMemberField.getText());
+                PreparedStatement statement = conn.prepareStatement("SELECT member_id, CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS full_name FROM members WHERE NOT EXISTS (SELECT * FROM attendances WHERE attendances.member_id = members.member_id AND DATE(attendances.attendance_date) = CURDATE()) AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) like ?");
+                statement.setString(1, "%"+searchMemberField.getText() + "%");
                 ResultSet resultSet = statement.executeQuery();
                 if (resultSet.next()) {
                     memberID = resultSet.getInt("member_id");

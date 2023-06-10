@@ -109,7 +109,7 @@ public class AddStaffPanel extends JPanel{
     private void addStaff(ListStaffPanel listStaffPanel){
         int userID = addUser();
         try(Connection conn = MySQL.getConnection()){
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO staffs VALUES (null, ?, ?, ?, ?, YEAR(CURDATE()) - YEAR(staff_birthdate) - (DATE_FORMAT(CURDATE(), '00-%m-%d') < DATE_FORMAT(staff_birthdate, '00-%m-%d')),?, ?, ?, ?, ?)");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO staffs VALUES (null, ?, ?, ?, ?, ?, YEAR(CURDATE()) - YEAR(staff_birthdate) - (DATE_FORMAT(CURDATE(), '00-%m-%d') < DATE_FORMAT(staff_birthdate, '00-%m-%d')), ?, ?, ?, ?)");
             statement.setInt(1, userID);
             statement.setString(2, firstNameField.getText());
             statement.setString(3, middleNameField.getText());

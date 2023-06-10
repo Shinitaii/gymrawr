@@ -163,14 +163,14 @@ public class AssignTrainerPanel extends JPanel{
 
     private void assignTrainer(){
         int duration = Integer.valueOf(code.substring(3));
-        String memberName = getName(memberTable);
-        String trainerName = getName(trainerTable);
+        int memberID = getName(memberTable);
+        int trainerID = getName(trainerTable);
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO appointments SELECT NULL, ts.trainer_id, ?, m.member_id, CURDATE(), DATE_ADD(CURDATE(), INTERVAL ? DAY) FROM trainer_specialization ts JOIN trainers t ON ts.trainer_id = t.trainer_id CROSS JOIN members m LEFT JOIN appointments a ON ts.trainer_id = a.trainer_id AND m.member_id = a.member_id WHERE CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) = ? AND CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) = ? AND a.appointment_id IS NULL;");
-            statement.setInt(1, selectionID[selection.getSelectedIndex()]);
-            statement.setInt(2, duration);
-            statement.setString(3, memberName);
-            statement.setString(4, trainerName);
+            PreparedStatement statement = conn.prepareStatement("insert into appointments values (null, ?, ?, ?, curdate(), date_add(curdate(), interval ? day))");
+            statement.setInt(1, trainerID);
+            statement.setInt(2, selectionID[selection.getSelectedIndex()]);
+            statement.setInt(3, memberID);
+            statement.setInt(4, duration);
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected > 0) {
                 Messages.trainerAssignSuccess();
@@ -179,7 +179,7 @@ public class AssignTrainerPanel extends JPanel{
                 }
                 disableProduct(code);
                 searchReceipt();
-                listAssignedTrainerPanel.retrieveDataFromDatabase();
+                listAssignedTrainerPanel.retrieveDataFromDatabase(trainerID, memberID, selectionID[selection.getSelectedIndex()]);
             } else {
                 Messages.trainerAssignFailed();
             }
@@ -190,29 +190,29 @@ public class AssignTrainerPanel extends JPanel{
         }
     }
 
-    private String getName(JTable table){
+    private int getName(JTable table){
         int selectedRow = table.getSelectedRow();
         int selectedColumn = table.getSelectedColumn();
 
         if (selectedRow != -1 && selectedColumn != -1) {
-            Object selectedValue = table.getValueAt(selectedRow, selectedColumn);
+            Object selectedValue = table.getValueAt(selectedRow, 0);
     
             if (selectedValue != null) {
-                return selectedValue.toString();
+                return Integer.valueOf(selectedValue.toString());
             }
         }
 
-        return "";
+        return -1;
     }
 
     private DefaultTableModel initializeMemberModel(DefaultTableModel tableModel, int select){
         String sql = "";
-        if(select == 0) sql = "SELECT CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN appointments ON members.member_id = appointments.member_id WHERE appointments.member_id IS NULL;";
-        else sql = "SELECT CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN appointments ON members.member_id = appointments.member_id WHERE appointments.member_id IS NULL AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) = ?;";
+        if(select == 0) sql = "SELECT members.member_id, CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN appointments ON members.member_id = appointments.member_id WHERE appointments.member_id IS NULL;";
+        else sql = "SELECT members.member_id, CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN appointments ON members.member_id = appointments.member_id WHERE appointments.member_id IS NULL AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) like ?;";
         tableModel = new DefaultTableModel();
         try (Connection conn = MySQL.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
-            if(select > 0) statement.setString(1, searchMemberField.getText());
+            if(select > 0) statement.setString(1, "%" + searchMemberField.getText() + "%");
             ResultSet result = statement.executeQuery();
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -242,7 +242,7 @@ public class AssignTrainerPanel extends JPanel{
     private DefaultTableModel initializeTrainerModel(DefaultTableModel tableModel, int selectionID){
         tableModel = new DefaultTableModel();
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS fullname_trainers, ts.trainer_id FROM trainer_specialization ts JOIN trainers t ON ts.trainer_id = t.trainer_id LEFT JOIN appointments a ON ts.trainer_id = a.trainer_id WHERE a.trainer_id IS NULL AND ts.training_id = ? AND t.trainer_id NOT IN (SELECT trainer_id FROM appointments WHERE training_id = ?);");
+            PreparedStatement statement = conn.prepareStatement("SELECT t.trainer_id, CONCAT(t.trainer_firstname, ' ', t.trainer_middlename, ' ', t.trainer_lastname) AS fullname_trainers FROM trainer_specialization ts JOIN trainers t ON ts.trainer_id = t.trainer_id LEFT JOIN appointments a ON ts.trainer_id = a.trainer_id WHERE a.trainer_id IS NULL AND ts.training_id = ? AND t.trainer_id NOT IN (SELECT trainer_id FROM appointments WHERE training_id = ?);");
             statement.setInt(1, selectionID);
             statement.setInt(2, selectionID);
 

@@ -12,13 +12,11 @@ import javax.swing.table.DefaultTableModel;
 
 import main.App.Main.SubPanels.AddUpdateList.AddUpdateListPanel;
 import main.App.Main.SubPanels.AddUpdateList.BackPanel;
-import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListAssignedTrainerPanel;
 import main.Database.MySQL;
 import main.Miscellanous.CommonComponent;
 import main.Miscellanous.Constants;
 import main.Miscellanous.Messages;
 import main.Objects.EquipmentType;
-import main.Objects.Training;
 import main.Properties.Custom.CustomButton;
 import main.Properties.Custom.TextLabel;
 
@@ -32,7 +30,6 @@ public class ReserveEquipmentPanel extends JPanel{
     private JComboBox<String> productCodeSelection;
     private CustomButton useProductCode;
     private JPanel formPanel;
-    private String code;
     private JTextField searchMemberField;
     private CustomButton searchMember;
     private int[] selectionID;
@@ -89,9 +86,9 @@ public class ReserveEquipmentPanel extends JPanel{
         selectionID = new int[EquipmentType.getEquipmentTypeList().size()];
         selection = CommonComponent.configureEquipmentTypeComboBox(selection, selectionID);
         CommonComponent.addComponent(formPanel, selection, 2, 1, 1, 1);
-        searchEquipment = new CustomButton("Search trainers", null, e -> searchTrainers(selectionID[selection.getSelectedIndex()]));
+        searchEquipment = new CustomButton("Search equipment", null, e -> searchTrainers(selectionID[selection.getSelectedIndex()]));
         CommonComponent.addComponent(formPanel, searchEquipment, 2, 4, 1, 1);
-        assign = new CustomButton("Assign trainer to member", null, e ->assignEquipment());
+        assign = new CustomButton("Reserve equipment to member", null, e ->assignEquipment());
         CommonComponent.addComponent(formPanel, assign, 3, 4, 1, 1);
     }
 
@@ -149,21 +146,24 @@ public class ReserveEquipmentPanel extends JPanel{
     private void assignEquipment() {
         // Get the necessary values
         String memberName = getName(memberTable);
-        String equipmentName = getName(trainerTable);
         int equipmentId = getID(trainerTable);
 
             try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO reservations (reservation_id, equipment_type_id, equipment_id, member_id, reservation_date) SELECT NULL, ?, e.equipment_id, m.member_id, CURRENT_TIMESTAMP FROM equipments e JOIN members m ON CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) = ? LEFT JOIN reservations r ON e.equipment_id = r.equipment_id AND m.member_id = r.member_id WHERE e.equipment_id = ? AND r.reservation_id IS NULL;");
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO reservations (reservation_id, equipment_type_id, equipment_id, member_id, reservation_date) SELECT NULL, ?, e.equipment_id, m.member_id, TIMESTAMPADD(MINUTE, ?, CURRENT_TIMESTAMP) FROM equipments e JOIN members m ON CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) = ? LEFT JOIN reservations r ON e.equipment_id = r.equipment_id AND m.member_id = r.member_id WHERE e.equipment_id = ? AND r.reservation_id IS NULL;");
             statement.setInt(1, selectionID[selection.getSelectedIndex()]);
-            statement.setString(2, memberName);
-            statement.setInt(3, equipmentId);
+            statement.setInt(2, Integer.valueOf(productCodeSelection.getSelectedItem().toString().substring(3)));
+            statement.setString(3, memberName);
+            statement.setInt(4, equipmentId);
 
             int rowsAffected = statement.executeUpdate();
-
             if (rowsAffected > 0) {
                 Messages.equipmentAssignSuccess();
-                disableProduct(equipmentName);
+                disableAvailability(equipmentId);
+                disableProduct(productCodeSelection.getSelectedItem().toString());
                 searchReceipt();
+                listReserveEquipmentPanel.retrieveDataFromDatabase();
+                revalidate();
+                repaint();
             } else {
                 Messages.equipmentAssignFailed();
             }
@@ -175,8 +175,19 @@ public class ReserveEquipmentPanel extends JPanel{
         }
     }
 
+    private void disableAvailability(int id) {
+        try (Connection conn = MySQL.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement("update equipments set equipment_availability = false where equipment_id = ?");
+            statement.setInt(1, id);
+            statement.executeUpdate();
+            conn.close();
+        } catch (SQLException e){
+            Messages.databaseConnectionFailed();
+            e.printStackTrace();
+        }
+    }
+
     private void searchEquipmentPanel(String code){
-        this.code = code;
         for(Component component : formPanel.getComponents()){
             component.setEnabled(true);
         }
@@ -227,12 +238,12 @@ public class ReserveEquipmentPanel extends JPanel{
         if (select == 0) {
             sql = "SELECT CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN reservations ON members.member_id = reservations.member_id WHERE reservations.member_id IS NULL;";
         } else {
-           sql = "SELECT CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN reservations ON members.member_id = reservations.member_id WHERE reservations.member_id IS NULL AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) = ?;";
+           sql = "SELECT CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) AS fullname_members FROM members LEFT JOIN reservations ON members.member_id = reservations.member_id WHERE reservations.member_id IS NULL AND CONCAT(member_firstname, ' ', member_middlename, ' ', member_lastname) like ?;";
         }
         tableModel = new DefaultTableModel();
         try (Connection conn = MySQL.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
-            if(select > 0) statement.setString(1, searchMemberField.getText());
+            if(select > 0) statement.setString(1, "%" + searchMemberField.getText() + "%");
             ResultSet result = statement.executeQuery();
             ResultSetMetaData metaData = result.getMetaData();
             int columnCount = metaData.getColumnCount();

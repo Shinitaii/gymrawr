@@ -49,7 +49,7 @@ public class POSPanel extends JPanel {
             
             String productLetter = identifyType(productType);
             if(type == 0 || product.getProductType() == type) {
-                if(x == 3){
+                if(x % 4 == 0){
                     y++;
                     x = 0;
                 }

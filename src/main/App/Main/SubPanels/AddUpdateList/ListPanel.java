@@ -2,6 +2,8 @@ package main.App.Main.SubPanels.AddUpdateList;
 import java.awt.BorderLayout;
 
 import javax.swing.*;
+
+import main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment.ListEquipmentPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Member.ListMemberPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Staff.ListStaffPanel;
 import main.App.Main.SubPanels.AddUpdateList.PanelNames.Trainer.ListTrainerPanel;
@@ -11,6 +13,7 @@ public class ListPanel extends JPanel{
     private ListMemberPanel memberPanel;
     private ListTrainerPanel trainerPanel;
     private ListStaffPanel staffPanel;
+    public ListEquipmentPanel equipmentPanel;
 
     public ListPanel(AddUpdateListPanel addUpdateListPanel, String panelName){
         setLayout(new BorderLayout());
@@ -23,7 +26,7 @@ public class ListPanel extends JPanel{
         if(panelName.equals("Member")) member();
         else if (panelName.equals("Trainer")) trainer();
         else if (panelName.equals("Staff")) staff();
-        // equipment update and list merged.
+        else if(panelName.equals("Equipment")) equipment();
     }
 
     private void member(){
@@ -41,6 +44,11 @@ public class ListPanel extends JPanel{
         add(staffPanel, BorderLayout.CENTER);
     }
 
+    private void equipment(){
+        equipmentPanel = new ListEquipmentPanel();
+        add(equipmentPanel, BorderLayout.CENTER);
+    }
+
     public ListMemberPanel getListMemberPanel(){
         return memberPanel;
     }
@@ -51,6 +59,10 @@ public class ListPanel extends JPanel{
 
     public ListStaffPanel getListStaffPanel(){
         return staffPanel;
+    }
+
+    public ListEquipmentPanel getListEquipmentPanel(){
+        return equipmentPanel;
     }
 
 }

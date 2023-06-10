@@ -37,14 +37,11 @@ public UpdateEquipmentPanel(){
     CommonComponent.addComponent(this, scrollPane, 0, 0, 3, 2);
     equipmentNameField = CommonComponent.configureTextField(this, "Equipment name", 0, 2, 1, 1);
     selectionEquipmentType = new int[EquipmentType.getEquipmentTypeList().size() + 1];
+    selection = new JComboBox<>();
     selection = CommonComponent.configureEquipmentTypeComboBox(selection, selectionEquipmentType);
-    selection.addItem("Sort all items");
-    selection.setSelectedIndex(3);
     CommonComponent.addComponent(this, selection, 1, 2, 1, 1);
     searchEquipment = new CustomButton("Search equipment", null, e -> searchEquipment());
     CommonComponent.addComponent(this, searchEquipment, 2, 2, 1, 1);
-
-    retrieveDataFromDatabase(0);
     table.addMouseListener(new MouseAdapter() {
         public void mousePressed(MouseEvent e) {
             JTable target = (JTable) e.getSource();
@@ -89,29 +86,24 @@ public UpdateEquipmentPanel(){
     }
 
     public void searchEquipment(){
-        int select;
-        
-        if (selection.getSelectedItem().equals("Sort all items")) {
-            select = 0;
-        } else {
-            select = selection.getSelectedIndex();
-        }
+        int select = selection.getSelectedIndex() + 1;
 
         retrieveDataFromDatabase(select);
     }
 
     private void retrieveDataFromDatabase(int select) {
         tableModel.setRowCount(0);
-        String equipmentName = "";
-        if(equipmentNameField.getText().equals("Equipment name")) equipmentName = "";
-        else equipmentName = equipmentNameField.getText();
-        String sql = "SELECT e.equipment_id, et.equipment_type_name, e.equipment_name, e.equipment_availability FROM equipments e JOIN equipment_types et ON e.equipment_type_id = et.equipment_type_id WHERE et.equipment_type_id = ?";
-        if(!equipmentNameField.getText().equals("Equipment name")) sql += " AND e.equipment_name = ?";
+        System.out.println(select);
+        String sql = "SELECT e.equipment_id, et.equipment_type_name, e.equipment_name, e.equipment_availability FROM equipments e JOIN equipment_types et ON e.equipment_type_id = et.equipment_type_id WHERE 1=1";
+        sql += " AND et.equipment_type_id = ?";
+        if(!equipmentNameField.getText().equals("Equipment name")){
+            sql += " AND e.equipment_name = ?";        
+        }
         try (Connection conn = MySQL.getConnection()) {
             PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, selectionEquipmentType[select]);
+            statement.setInt(1, select);
             if(!equipmentNameField.getText().equals("Equipment name")){
-                statement.setString(1, "%" + equipmentName + "%");
+                statement.setString(2, "%" + equipmentNameField.getText() + "%");
             }
             System.out.println("SQL Query: " + statement.toString());
             ResultSet resultSet = statement.executeQuery();

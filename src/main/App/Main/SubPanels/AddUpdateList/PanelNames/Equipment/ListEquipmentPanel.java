@@ -1,38 +1,29 @@
 package main.App.Main.SubPanels.AddUpdateList.PanelNames.Equipment;
-import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.sql.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
-import main.App.Main.SubPanels.AddUpdateList.AddUpdateListPanel;
-import main.App.Main.SubPanels.AddUpdateList.BackPanel;
 import main.Database.MySQL;
-
-
-public class ListReserveEquipmentPanel extends JPanel {
-    private BackPanel backPanel;
+public class ListEquipmentPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JScrollPane scrollPane;
 
-    public ListReserveEquipmentPanel(AddUpdateListPanel addUpdateListPanel){
-        setLayout(new BorderLayout());
-        backPanel = new BackPanel(addUpdateListPanel);
-        add(backPanel, BorderLayout.NORTH);
+    public ListEquipmentPanel(){
         tableModel = new DefaultTableModel();
         table = new JTable();
         retrieveDataFromDatabase();
         table.getTableHeader().setReorderingAllowed(false);
         scrollPane = new JScrollPane(table);
         scrollPane.setPreferredSize(new Dimension(650,350));
-        add(scrollPane, BorderLayout.CENTER);
+        add(scrollPane);
     }
 
     public void retrieveDataFromDatabase() {
         tableModel.setRowCount(0);
         try (Connection conn = MySQL.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement("SELECT r.reservation_id, CONCAT(m.member_firstname, ' ', m.member_middlename, ' ', m.member_lastname) AS member_fullname, et.equipment_type_name, e.equipment_id, r.reservation_date FROM reservations r INNER JOIN members m ON r.member_id = m.member_id INNER JOIN equipments e ON r.equipment_id = e.equipment_id INNER JOIN equipment_types et ON r.equipment_type_id = et.equipment_type_id ORDER BY r.reservation_id;");
+            PreparedStatement statement = conn.prepareStatement("SELECT e.equipment_name, et.equipment_type_name, COUNT(*) AS total_count FROM equipments e INNER JOIN equipment_types et ON e.equipment_type_id = et.equipment_type_id GROUP BY e.equipment_name, et.equipment_type_name;");
             ResultSet resultSet = statement.executeQuery();
             ResultSetMetaData metaData = resultSet.getMetaData();
             int columnCount = metaData.getColumnCount();
@@ -64,8 +55,8 @@ public class ListReserveEquipmentPanel extends JPanel {
     }
 
     private String removePrefix(String columnName) {
-        if (columnName.startsWith("appointment_")) {
-            return columnName.substring(12);
+        if (columnName.startsWith("trainer_")) {
+            return columnName.substring(8);
         }
         return columnName;
     }
@@ -75,4 +66,3 @@ public class ListReserveEquipmentPanel extends JPanel {
         retrieveDataFromDatabase();
     }
 }
-

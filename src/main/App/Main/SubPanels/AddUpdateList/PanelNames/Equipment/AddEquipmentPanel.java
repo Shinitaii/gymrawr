@@ -37,13 +37,13 @@ public class AddEquipmentPanel extends JPanel{
         selection = CommonComponent.configureEquipmentTypeComboBox(selection, selectionEquipmentType);
         CommonComponent.addComponent(this, selection, 1, 1, 1, 1);
 
-        add = new CustomButton("Add", null, e -> addEquipment(updatePanel.getUpdateEquipmentPanel()));
+        add = new CustomButton("Add", null, e -> addEquipment(updatePanel.getUpdateEquipmentPanel(), listPanel));
         CommonComponent.addComponent(this, add, 2, 1, 1, 1); 
         clear = new CustomButton("Clear", null, e -> clearForm());
         CommonComponent.addComponent(this, clear, 3,1, 1, 1);
     }
 
-    private void addEquipment(UpdateEquipmentPanel updateEquipmentList){
+    private void addEquipment(UpdateEquipmentPanel updateEquipmentList, ListPanel listPanel){
         try (Connection conn = MySQL.getConnection()){
             PreparedStatement statement = conn.prepareStatement("INSERT INTO equipments values (null, ?, ?, true)");
             statement.setInt(1, selectionEquipmentType[selection.getSelectedIndex()]);
@@ -52,6 +52,7 @@ public class AddEquipmentPanel extends JPanel{
             for(int i = 0; i < Integer.valueOf(equipmentQuantity.getText()); i++) rowsAffected = statement.executeUpdate();
             if(rowsAffected > 0) {
                 updateEquipmentList.searchEquipment();
+                listPanel.getListEquipmentPanel().retrieveDataFromDatabase();
                 Messages.equipmentAdded(); 
             }
             else Messages.equipmentAddFailed();
